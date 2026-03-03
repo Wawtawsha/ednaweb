@@ -6,32 +6,33 @@ See: .planning/ROADMAP.md (updated 2026-03-03)
 See: .planning/REQUIREMENTS.md (updated 2026-03-03)
 
 **Core value:** Convert SSIS professionals into SSIS Framework customers through a modern, conversion-optimized landing page that amplifies Andy Leonard's credibility
-**Current focus:** Phase 2 - Privacy + Tracking
+**Current focus:** Phase 3 - Lead Capture + Integrations
 
 ## Current Position
 
-Phase: 2 of 3 (Privacy + Tracking)
+Phase: 3 of 3 (Lead Capture + Integrations)
 Plan: 0 of 2 in current phase
-Status: Ready to plan Phase 2
-Last activity: 2026-03-03 -- Phase 1 complete (all 4 plans)
+Status: Ready to plan Phase 3
+Last activity: 2026-03-03 -- Phase 2 complete (all 2 plans)
 
-Progress: [████░░░░░░] 40%
+Progress: [███████░░░] 70%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 4
-- Average duration: ~15 min
-- Total execution time: ~1 hour
+- Total plans completed: 6
+- Average duration: ~12 min
+- Total execution time: ~1.25 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | Phase 1: Visual Page | 4/4 | ~1 hr | ~15 min |
+| Phase 2: Privacy + Tracking | 2/2 | ~15 min | ~8 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01, 01-02, 01-03, 01-04
+- Last 6 plans: 01-01, 01-02, 01-03, 01-04, 02-01, 02-02
 - Trend: All completed in single session
 
 *Updated after each plan completion*
@@ -92,6 +93,37 @@ Progress: [████░░░░░░] 40%
 - [Phase 1]: Canonical URL set to ssisframework.com (placeholder -- needs actual domain)
 - [Phase 1]: Tailwind CDN warning is expected and harmless for dev; will use build step for production if needed
 
+## Phase 2 Deliverables
+
+### Cookie Consent Banner (PRIV-01)
+- Fixed bottom bar, non-blocking, equal-prominence Accept/Reject buttons
+- `role="dialog"` with `aria-label` and `aria-describedby`
+- Consent stored in localStorage with 365-day expiry
+- Returns visitors: no re-prompt (consent persists)
+- Rejected: zero tracking scripts loaded, full page functionality
+- Privacy Policy link in banner text
+
+### Tracking Scripts (TRCK-01, TRCK-02, TRCK-03)
+All gated behind cookie consent -- scripts only load after "Accept":
+
+- **GA4**: Dynamic script injection, custom scroll depth events at 25/50/75/90%
+- **Microsoft Clarity**: Standard snippet, dynamically injected
+- **Nessus CRM** (vanilla JS port from Shrike):
+  - Session ID (per browser session, `sessionStorage`)
+  - Page view tracking
+  - CTA click tracking (all `#contact`, `calendly`, `.btn-primary` links)
+  - Scroll depth at 25/50/75/90%
+  - Time-on-page (fires on `visibilitychange` to hidden)
+  - Section visibility tracking (IntersectionObserver, 30% threshold)
+  - Silent failure on all fetches (`keepalive: true`, `.catch(() => {})`)
+
+### Placeholder IDs (need real values)
+- `GA4_ID: 'G-XXXXXXXXXX'`
+- `CLARITY_ID: 'xxxxxxxxxx'`
+- `NESSUS_CLIENT_ID: '00000000-0000-0000-0000-000000000000'`
+
+All three skip initialization when placeholder IDs are detected.
+
 ### Pending Todos
 
 - Vercel deployment (deferred -- page is ready to deploy, needs domain decision)
@@ -108,5 +140,6 @@ Progress: [████░░░░░░] 40%
 ## Session Continuity
 
 Last session: 2026-03-03
-Stopped at: Phase 1 complete; ready to plan Phase 2 (cookie consent + tracking)
+Stopped at: Phase 2 complete; ready for Phase 3 (lead capture + integrations)
 Resume file: None
+Next: Phase 3 plans 03-01 (newsletter form) and 03-02 (Calendly + contact form + Nessus lead capture)
