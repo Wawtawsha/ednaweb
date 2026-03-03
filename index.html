@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SSIS Framework by EDNA | Metadata-Driven Orchestration for SSIS</title>
+  <meta name="description" content="SSIS Framework: Metadata-driven orchestration for SQL Server Integration Services. Execute hundreds of SSIS packages with a single stored procedure call. Built by Andy Leonard, Microsoft MVP.">
+  <meta name="keywords" content="SSIS Framework, SSIS orchestration, SSIS Catalog, data integration, ETL framework, SSIS management, Enterprise Data Analytics, Andy Leonard, DILM Suite">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23000'/%3E%3Ctext x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial,sans-serif' font-weight='800' font-size='18' fill='%2318a05c'%3EE%3C/text%3E%3C/svg%3E">
+
+  <!-- SEO -->
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://ssisframework.com/">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="SSIS Framework - Complete Your SSIS Catalog">
+  <meta property="og:description" content="Metadata-driven orchestration for SSIS. One stored procedure. One argument. Every package executes in order.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ssisframework.com/">
+  <meta property="og:image" content="https://ssisframework.com/assets/images/og-image.png">
+  <meta property="og:site_name" content="EDNA - Enterprise Data & Analytics">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SSIS Framework - Complete Your SSIS Catalog">
+  <meta name="twitter:description" content="Metadata-driven orchestration for SSIS. One stored procedure. One argument. Every package executes in order.">
+  <meta name="twitter:image" content="https://ssisframework.com/assets/images/og-image.png">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SSIS Framework",
+    "description": "Metadata-driven orchestration framework for SQL Server Integration Services",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Windows",
+    "author": {
+      "@type": "Person",
+      "name": "Andy Leonard",
+      "jobTitle": "Chief Data Engineer",
+      "affiliation": {
+        "@type": "Organization",
+        "name": "Enterprise Data & Analytics",
+        "url": "https://entdna.com"
+      }
+    },
+    "offers": {
+      "@type": "AggregateOffer",
+      "priceCurrency": "USD",
+      "offerCount": "3",
+      "description": "Available in Standard, Professional, and Enterprise editions"
+    }
+  }
+  </script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            edna: {
+              black: '#000000',
+              dark: '#0a0a0a',
+              darker: '#111111',
+              surface: '#1a1a1a',
+              border: '#2a2a2a',
+              muted: '#888888',
+              green: '#18a05c',
+              'green-light': '#76e49e',
+              'green-glow': 'rgba(24, 160, 92, 0.15)',
+              rose: '#cd2653',
+              'rose-light': '#e85d7f',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Consolas', 'monospace'],
+          },
+          fontSize: {
+            'hero': 'clamp(2.25rem, 5vw, 4rem)',
+            'section': 'clamp(1.75rem, 3.5vw, 2.75rem)',
+            'sub': 'clamp(1rem, 2vw, 1.25rem)',
+          },
+          maxWidth: {
+            'page': '1200px',
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.6s ease-out forwards',
+            'slide-up': 'slideUp 0.6s ease-out forwards',
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: '0' },
+              '100%': { opacity: '1' },
+            },
+            slideUp: {
+              '0%': { opacity: '0', transform: 'translateY(20px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            },
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Scroll reveal - elements start hidden */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Respect reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+      * {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* Code block styling */
+    .code-keyword { color: #76e49e; }
+    .code-param { color: #cd2653; }
+    .code-string { color: #fbbf24; }
+    .code-comment { color: #6b7280; }
+    .code-function { color: #60a5fa; }
+
+    /* Sticky nav transition */
+    .nav-scrolled {
+      background-color: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid #2a2a2a;
+    }
+
+    /* FAQ accordion */
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      padding-top: 0;
+      padding-bottom: 0;
+      transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+    }
+    .faq-item.open .faq-answer {
+      max-height: 500px;
+      padding-top: 0;
+      padding-bottom: 1.25rem;
+    }
+    .faq-item.open .faq-chevron {
+      transform: rotate(180deg);
+    }
+    .faq-chevron {
+      transition: transform 0.3s ease;
+    }
+
+    /* Subtle gradient for section separators */
+    .section-gradient {
+      background: linear-gradient(180deg, #000000 0%, #0a0a0a 50%, #000000 100%);
+    }
+
+    /* Green glow effect on hover for primary buttons */
+    .btn-primary {
+      box-shadow: 0 0 0 0 rgba(24, 160, 92, 0);
+      transition: box-shadow 0.3s ease, background-color 0.3s ease, transform 0.15s ease;
+    }
+    .btn-primary:hover {
+      box-shadow: 0 0 20px rgba(24, 160, 92, 0.3);
+    }
+    .btn-primary:active {
+      transform: scale(0.98);
+    }
+
+    /* Skip to content (accessibility) */
+    .skip-to-content {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      padding: 8px 16px;
+      background: #18a05c;
+      color: #000;
+      z-index: 100;
+      transition: top 0.2s ease;
+    }
+    .skip-to-content:focus {
+      top: 0;
+    }
+
+    /* Chess layout feature cards */
+    .feature-card {
+      border: 1px solid #2a2a2a;
+      transition: border-color 0.3s ease;
+    }
+    .feature-card:hover {
+      border-color: #18a05c;
+    }
+
+    /* Focus styles for accessibility (WCAG 2.1 AA) */
+    a:focus-visible, button:focus-visible {
+      outline: 2px solid #18a05c;
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+
+    /* Smooth scroll offset for fixed nav */
+    :target {
+      scroll-margin-top: 80px;
+    }
+  </style>
+</head>
+<body class="bg-edna-black text-white font-sans antialiased">
+
+  <!-- Skip to content (WCAG) -->
+  <a href="#main-content" class="skip-to-content font-semibold">Skip to main content</a>
+
+  <!-- ========== NAVIGATION ========== -->
+  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+    <div class="max-w-page mx-auto px-6 py-4 flex items-center justify-between">
+      <!-- Logo -->
+      <a href="#" class="flex items-center gap-3 group">
+        <span class="text-xl font-bold text-white group-hover:text-edna-green transition-colors">EDNA</span>
+        <span class="text-sm text-edna-muted hidden sm:inline">Enterprise Data & Analytics</span>
+      </a>
+
+      <!-- Desktop Nav -->
+      <div class="hidden md:flex items-center gap-8">
+        <a href="#problem" class="text-sm text-gray-300 hover:text-white transition-colors">The Problem</a>
+        <a href="#solution" class="text-sm text-gray-300 hover:text-white transition-colors">Solution</a>
+        <a href="#features" class="text-sm text-gray-300 hover:text-white transition-colors">Features</a>
+        <a href="#suite" class="text-sm text-gray-300 hover:text-white transition-colors">DILM Suite</a>
+        <a href="#about" class="text-sm text-gray-300 hover:text-white transition-colors">About</a>
+        <a href="#contact" class="btn-primary bg-edna-green text-black font-semibold px-5 py-2 rounded-lg text-sm hover:bg-edna-green-light">
+          Get Started
+        </a>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <button id="mobile-menu-btn" class="md:hidden text-white p-2" aria-label="Toggle navigation menu" aria-expanded="false">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-edna-dark border-t border-edna-border">
+      <div class="px-6 py-4 flex flex-col gap-4">
+        <a href="#problem" class="text-gray-300 hover:text-white transition-colors py-2">The Problem</a>
+        <a href="#solution" class="text-gray-300 hover:text-white transition-colors py-2">Solution</a>
+        <a href="#features" class="text-gray-300 hover:text-white transition-colors py-2">Features</a>
+        <a href="#suite" class="text-gray-300 hover:text-white transition-colors py-2">DILM Suite</a>
+        <a href="#about" class="text-gray-300 hover:text-white transition-colors py-2">About</a>
+        <a href="#contact" class="btn-primary bg-edna-green text-black font-semibold px-5 py-3 rounded-lg text-sm text-center hover:bg-edna-green-light">
+          Get Started
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ========== MAIN CONTENT ========== -->
+  <main id="main-content">
+
+    <!-- ===== HERO SECTION ===== -->
+    <section id="hero" class="min-h-screen flex items-center justify-center pt-20 pb-16 px-6">
+      <div class="max-w-page mx-auto text-center">
+        <div class="animate-fade-in">
+          <!-- Eyebrow -->
+          <p class="text-edna-green font-mono text-sm tracking-wider uppercase mb-6">
+            By Enterprise Data & Analytics
+          </p>
+
+          <!-- Headline -->
+          <h1 class="text-hero font-extrabold leading-tight mb-6 max-w-4xl mx-auto">
+            The SSIS Catalog Was
+            <span class="text-edna-green"> Never Finished.</span>
+          </h1>
+
+          <!-- Subtitle -->
+          <p class="text-sub text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+            You followed best practices. Small packages. Single responsibility.
+            Now you have dozens of SSIS packages and no way to orchestrate them.
+            <span class="text-white font-medium">SSIS Framework fixes that.</span>
+          </p>
+
+          <!-- Dual CTAs -->
+          <div class="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+            <a href="#contact" class="btn-primary bg-edna-green text-black font-bold px-8 py-4 rounded-lg text-lg hover:bg-edna-green-light">
+              Schedule a Consultation
+            </a>
+            <a href="#pricing" class="border border-edna-border text-white font-semibold px-8 py-4 rounded-lg text-lg hover:border-edna-green hover:text-edna-green transition-colors">
+              View Pricing
+            </a>
+          </div>
+        </div>
+
+        <!-- Code Snippet -->
+        <div class="animate-slide-up max-w-2xl mx-auto">
+          <div class="bg-edna-surface border border-edna-border rounded-xl overflow-hidden">
+            <div class="flex items-center gap-2 px-4 py-3 border-b border-edna-border">
+              <div class="w-3 h-3 rounded-full bg-red-500/60"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500/60"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500/60"></div>
+              <span class="text-xs text-edna-muted font-mono ml-2">SSMS &mdash; Execute SSIS Application</span>
+            </div>
+            <div class="p-6 font-mono text-sm sm:text-base leading-relaxed text-left overflow-x-auto">
+              <p class="code-comment">-- Execute your entire SSIS application</p>
+              <p class="code-comment">-- with a single command</p>
+              <p class="mt-3">
+                <span class="code-keyword">EXEC</span> <span class="code-function">custom</span>.<span class="code-function">execute_catalog_parent_package</span>
+              </p>
+              <p class="pl-6">
+                <span class="code-param">@application_name</span> = <span class="code-string">'My ETL Application'</span>
+              </p>
+              <p class="mt-3 code-comment">-- That's it. Every package runs in order.</p>
+              <p class="code-comment">-- Metadata-driven. Restartable. Logged.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TRUST STRIP ===== -->
+    <section id="trust" class="border-y border-edna-border py-8 px-6 bg-edna-dark/50">
+      <div class="max-w-page mx-auto">
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-8 text-center">
+          <div class="reveal">
+            <p class="text-2xl sm:text-3xl font-bold text-edna-green">20+</p>
+            <p class="text-xs sm:text-sm text-edna-muted mt-1">Years SSIS Expertise</p>
+          </div>
+          <div class="reveal">
+            <p class="text-2xl sm:text-3xl font-bold text-edna-green">12+</p>
+            <p class="text-xs sm:text-sm text-edna-muted mt-1">Books Published</p>
+          </div>
+          <div class="reveal">
+            <p class="text-2xl sm:text-3xl font-bold text-edna-green">MVP</p>
+            <p class="text-xs sm:text-sm text-edna-muted mt-1">Microsoft Data Platform</p>
+          </div>
+          <div class="reveal">
+            <p class="text-2xl sm:text-3xl font-bold text-edna-green">100+</p>
+            <p class="text-xs sm:text-sm text-edna-muted mt-1">Conference Presentations</p>
+          </div>
+          <div class="reveal">
+            <p class="text-2xl sm:text-3xl font-bold text-edna-green">1000s</p>
+            <p class="text-xs sm:text-sm text-edna-muted mt-1">Packages Orchestrated</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PROBLEM SECTION ===== -->
+    <section id="problem" class="py-20 sm:py-28 px-6">
+      <div class="max-w-page mx-auto">
+        <div class="max-w-3xl mx-auto text-center reveal">
+          <p class="text-edna-green font-mono text-sm tracking-wider uppercase mb-4">The Problem</p>
+          <h2 class="text-section font-bold mb-8">
+            You Built It Right. Now You Can't Run It.
+          </h2>
+        </div>
+
+        <div class="max-w-3xl mx-auto space-y-6 text-gray-400 text-lg leading-relaxed reveal">
+          <p>
+            You followed the SSIS best practice: small, single-purpose packages. Each one does its job well.
+            But now you have <span class="text-white font-semibold">dozens&mdash;maybe hundreds</span>&mdash;of packages
+            that need to execute in a specific order.
+          </p>
+          <p>
+            The SSIS Catalog handles deployment and configuration. But it has no answer for
+            <span class="text-edna-rose font-semibold">orchestration</span>.
+          </p>
+
+          <!-- Andy's quote -->
+          <blockquote class="border-l-4 border-edna-green pl-6 py-2 my-8 text-white italic">
+            "You now have a bunch of SSIS packages that require executing in some order.
+            What's a data integration developer to do?"
+            <footer class="text-edna-muted text-sm mt-2 not-italic">&mdash; Andy Leonard, Microsoft MVP</footer>
+          </blockquote>
+
+          <p>
+            The Execute Package Task can only call packages <span class="text-edna-rose">within the same project</span>.
+            Cross-project execution? Not supported. You're trapped in a single SSIS project,
+            or you're building brittle workarounds with SQL Agent jobs and batch scripts.
+          </p>
+        </div>
+
+        <!-- Pain Points Grid -->
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-16 max-w-4xl mx-auto">
+          <div class="bg-edna-surface border border-edna-border rounded-lg p-6 reveal">
+            <div class="text-edna-rose text-2xl mb-3">&#x26A0;</div>
+            <h3 class="font-semibold text-white mb-2">No Orchestration</h3>
+            <p class="text-sm text-gray-400">The Catalog deploys packages. It doesn't run them in order.</p>
+          </div>
+          <div class="bg-edna-surface border border-edna-border rounded-lg p-6 reveal">
+            <div class="text-edna-rose text-2xl mb-3">&#x1F512;</div>
+            <h3 class="font-semibold text-white mb-2">Project Boundaries</h3>
+            <p class="text-sm text-gray-400">Execute Package Task is locked to a single project. Cross-project calls blocked.</p>
+          </div>
+          <div class="bg-edna-surface border border-edna-border rounded-lg p-6 reveal">
+            <div class="text-edna-rose text-2xl mb-3">&#x1F504;</div>
+            <h3 class="font-semibold text-white mb-2">Full Re-Runs on Failure</h3>
+            <p class="text-sm text-gray-400">ETL fails at package 47 of 71? Restart from 1. Hours wasted.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SOLUTION SECTION ===== -->
+    <section id="solution" class="py-20 sm:py-28 px-6 bg-edna-dark/30">
+      <div class="max-w-page mx-auto">
+        <div class="max-w-3xl mx-auto text-center reveal">
+          <p class="text-edna-green font-mono text-sm tracking-wider uppercase mb-4">The Solution</p>
+          <h2 class="text-section font-bold mb-6">
+            One Stored Procedure. Every Package. In Order.
+          </h2>
+          <p class="text-sub text-gray-400 mb-12 leading-relaxed">
+            SSIS Framework is a <span class="text-white font-medium">metadata-driven orchestration engine</span>
+            that sits on top of the SSIS Catalog. Define your application once.
+            Execute it with a single command.
+          </p>
+        </div>
+
+        <!-- Before / After -->
+        <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto reveal">
+          <!-- Before -->
+          <div class="bg-edna-surface border border-edna-rose/30 rounded-xl overflow-hidden">
+            <div class="px-4 py-3 border-b border-edna-border flex items-center gap-2">
+              <span class="text-edna-rose font-semibold text-sm">Before: Manual Orchestration</span>
+            </div>
+            <div class="p-5 font-mono text-xs sm:text-sm leading-relaxed text-gray-400 overflow-x-auto">
+              <p class="code-comment">-- Package 1 of 71...</p>
+              <p><span class="code-keyword">EXEC</span> [SSISDB].[catalog].[create_execution]</p>
+              <p class="pl-4"><span class="code-param">@package_name</span> = <span class="code-string">'Extract_Customers.dtsx'</span>,</p>
+              <p class="pl-4"><span class="code-param">@folder_name</span> = <span class="code-string">'ETL'</span>,</p>
+              <p class="pl-4"><span class="code-param">@project_name</span> = <span class="code-string">'DataWarehouse'</span>,</p>
+              <p class="pl-4"><span class="code-param">@execution_id</span> = <span class="code-param">@exec_id</span> <span class="code-keyword">OUTPUT</span></p>
+              <p class="mt-2"><span class="code-keyword">EXEC</span> [SSISDB].[catalog].[start_execution] <span class="code-param">@exec_id</span></p>
+              <p class="mt-2 code-comment">-- Wait... check status... handle errors...</p>
+              <p class="code-comment">-- Now repeat for packages 2 through 71</p>
+              <p class="mt-2 text-edna-rose">-- 500+ lines of brittle T-SQL</p>
+            </div>
+          </div>
+
+          <!-- After -->
+          <div class="bg-edna-surface border border-edna-green/30 rounded-xl overflow-hidden">
+            <div class="px-4 py-3 border-b border-edna-border flex items-center gap-2">
+              <span class="text-edna-green font-semibold text-sm">After: SSIS Framework</span>
+            </div>
+            <div class="p-5 font-mono text-xs sm:text-sm leading-relaxed overflow-x-auto">
+              <p class="code-comment">-- All 71 packages. One command.</p>
+              <p class="mt-3">
+                <span class="code-keyword">EXEC</span> <span class="code-function">custom</span>.<span class="code-function">execute_catalog_parent_package</span>
+              </p>
+              <p class="pl-4">
+                <span class="code-param">@application_name</span> = <span class="code-string">'DataWarehouse ETL'</span>
+              </p>
+              <p class="mt-6 code-comment">-- Packages execute in metadata-defined order</p>
+              <p class="code-comment">-- Cross-project, cross-folder</p>
+              <p class="code-comment">-- Restartable from point of failure</p>
+              <p class="code-comment">-- Every execution logged with discrete IDs</p>
+              <p class="mt-4 text-edna-green font-semibold">-- 2 lines. Done.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FEATURES SECTION ===== -->
+    <section id="features" class="py-20 sm:py-28 px-6">
+      <div class="max-w-page mx-auto">
+        <div class="max-w-3xl mx-auto text-center mb-16 reveal">
+          <p class="text-edna-green font-mono text-sm tracking-wider uppercase mb-4">Why SSIS Framework</p>
+          <h2 class="text-section font-bold">
+            Built for How You Actually Work
+          </h2>
+        </div>
+
+        <!-- Chess layout features -->
+        <div class="space-y-16 max-w-5xl mx-auto">
+
+          <!-- Feature 1: Orchestration -->
+          <div class="grid md:grid-cols-2 gap-8 items-center reveal">
+            <div>
+              <h3 class="text-xl sm:text-2xl font-bold mb-4">Stop Managing Packages One at a Time</h3>
+              <p class="text-gray-400 leading-relaxed mb-4">
+                Define an SSIS Application&mdash;a collection of packages configured to execute in a specific order.
+                Add new packages by adding metadata rows, not code. Remove them the same way.
+              </p>
+              <p class="text-sm text-edna-green font-medium">Metadata-driven orchestration &rarr;</p>
+            </div>
+            <div class="bg-edna-surface border border-edna-border rounded-lg p-6">
+              <div class="font-mono text-sm text-gray-300">
+                <p class="code-comment">-- Add a package to your application:</p>
+                <p class="mt-2"><span class="code-keyword">INSERT INTO</span> custom.ApplicationPackages</p>
+                <p class="pl-4">(ApplicationName, PackageName, ExecutionOrder)</p>
+                <p><span class="code-keyword">VALUES</span></p>
+                <p class="pl-4">(<span class="code-string">'My ETL'</span>, <span class="code-string">'Load_Products.dtsx'</span>, <span class="text-amber-400">15</span>)</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Feature 2: Cross-Project (reversed layout) -->
+          <div class="grid md:grid-cols-2 gap-8 items-center reveal">
+            <div class="md:order-2">
+              <h3 class="text-xl sm:text-2xl font-bold mb-4">Break Free from Project Boundaries</h3>
+              <p class="text-gray-400 leading-relaxed mb-4">
+                The Execute Package Task locks you into a single SSIS project.
+                SSIS Framework orchestrates packages across <span class="text-white">any project, any folder</span> in the Catalog.
+                Share utility packages across applications without duplication.
+              </p>
+              <p class="text-sm text-edna-green font-medium">Cross-project execution &rarr;</p>
+            </div>
+            <div class="bg-edna-surface border border-edna-border rounded-lg p-6 md:order-1">
+              <div class="space-y-3">
+                <div class="flex items-center gap-3">
+                  <span class="text-edna-green">&#x2714;</span>
+                  <span class="text-sm text-gray-300">Folder: <span class="font-mono text-white">ETL/Extract</span></span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="text-edna-green">&#x2714;</span>
+                  <span class="text-sm text-gray-300">Folder: <span class="font-mono text-white">ETL/Transform</span></span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="text-edna-green">&#x2714;</span>
+                  <span class="text-sm text-gray-300">Folder: <span class="font-mono text-white">Shared/Utilities</span></span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="text-edna-green">&#x2714;</span>
+                  <span class="text-sm text-gray-300">Folder: <span class="font-mono text-white">DataWarehouse/Load</span></span>
+                </div>
+                <p class="text-xs text-edna-muted mt-4 pt-3 border-t border-edna-border">All orchestrated as a single application</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Feature 3: Restartability -->
+          <div class="grid md:grid-cols-2 gap-8 items-center reveal">
+            <div>
+              <h3 class="text-xl sm:text-2xl font-bold mb-4">Restart from Failure, Not from Zero</h3>
+              <p class="text-gray-400 leading-relaxed mb-4">
+                Your ETL fails at package 47 of 71 at 3 AM. Without a framework, you re-run all 71.
+                With SSIS Framework, you <span class="text-white">restart from package 47</span>.
+                Hours saved. Every time.
+              </p>
+              <p class="text-sm text-edna-green font-medium">Application restartability &rarr;</p>
+            </div>
+            <div class="bg-edna-surface border border-edna-border rounded-lg p-6">
+              <div class="space-y-2 font-mono text-sm">
+                <p><span class="text-gray-500">Pkg 1-46:</span> <span class="text-edna-green">&#x2714; Complete</span> <span class="text-xs text-edna-muted">(skipped on restart)</span></p>
+                <p><span class="text-gray-500">Pkg 47:</span> <span class="text-edna-rose">&#x2718; Failed</span> <span class="text-xs text-white">&larr; Restart here</span></p>
+                <p><span class="text-gray-500">Pkg 48-71:</span> <span class="text-gray-500">&#x23F8; Pending</span></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Feature 4: Governance -->
+          <div class="grid md:grid-cols-2 gap-8 items-center reveal">
+            <div class="md:order-2">
+              <h3 class="text-xl sm:text-2xl font-bold mb-4">Know Exactly What Ran, When, and Why</h3>
+              <p class="text-gray-400 leading-relaxed mb-4">
+                Every package execution gets a discrete ID in the SSIS Catalog.
+                Your DBA can see exactly which packages ran, in what order, with what parameters.
+                Root cause analysis in minutes, not hours.
+              </p>
+              <p class="text-sm text-edna-green font-medium">Centralized logging &amp; governance &rarr;</p>
+            </div>
+            <div class="bg-edna-surface border border-edna-border rounded-lg p-6 md:order-1">
+              <div class="space-y-3 font-mono text-xs sm:text-sm">
+                <div class="flex justify-between text-gray-300">
+                  <span>execution_id</span>
+                  <span>package_name</span>
+                  <span class="hidden sm:inline">status</span>
+                </div>
+                <div class="border-t border-edna-border pt-2 space-y-1">
+                  <div class="flex justify-between"><span class="text-edna-muted">48201</span><span class="text-white">Extract_Orders</span><span class="text-edna-green hidden sm:inline">Success</span></div>
+                  <div class="flex justify-between"><span class="text-edna-muted">48202</span><span class="text-white">Transform_Orders</span><span class="text-edna-green hidden sm:inline">Success</span></div>
+                  <div class="flex justify-between"><span class="text-edna-muted">48203</span><span class="text-white">Load_Orders</span><span class="text-edna-rose hidden sm:inline">Failed</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== DILM SUITE ECOSYSTEM ===== -->
+    <section id="suite" class="py-20 sm:py-28 px-6 bg-edna-dark/30">
+      <div class="max-w-page mx-auto">
+        <div class="max-w-3xl mx-auto text-center mb-16 reveal">
+          <p class="text-edna-green font-mono text-sm tracking-wider uppercase mb-4">The Ecosystem</p>
+          <h2 class="text-section font-bold mb-4">
+            SSIS Framework Is Just the Start
+          </h2>
+          <p class="text-sub text-gray-400 leading-relaxed">
+            Part of the <span class="text-white font-medium">DILM Suite</span>&mdash;a complete toolkit for
+            Data Integration Lifecycle Management. Every tool works together.
+          </p>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          <!-- SSIS Framework (highlighted) -->
+          <div class="feature-card bg-edna-surface rounded-xl p-6 border-edna-green/50 reveal">
+            <div class="text-edna-green text-3xl mb-4">&#x2699;</div>
+            <h3 class="text-lg font-bold mb-2">SSIS Framework</h3>
+            <p class="text-sm text-gray-400 mb-4">Metadata-driven orchestration. Execute entire SSIS applications with a single command.</p>
+            <span class="text-xs font-semibold text-edna-green bg-edna-green/10 px-3 py-1 rounded-full">Featured Product</span>
+          </div>
+
+          <!-- Catalog Compare -->
+          <div class="feature-card bg-edna-surface rounded-xl p-6 reveal">
+            <div class="text-edna-green-light text-3xl mb-4">&#x1F50D;</div>
+            <h3 class="text-lg font-bold mb-2">Catalog Compare</h3>
+            <p class="text-sm text-gray-400 mb-4">Compare and deploy SSIS Catalogs across environments. Script entire folders with dependency ordering.</p>
+            <span class="text-xs text-edna-muted">Enterprise: $4,995/year</span>
+          </div>
+
+          <!-- Framework Manager -->
+          <div class="feature-card bg-edna-surface rounded-xl p-6 reveal">
+            <div class="text-edna-green-light text-3xl mb-4">&#x1F5A5;</div>
+            <h3 class="text-lg font-bold mb-2">Framework Manager</h3>
+            <p class="text-sm text-gray-400 mb-4">Visual management tool for SSIS Framework. Create, configure, and execute applications from a GUI.</p>
+            <span class="text-xs text-edna-muted">Included with commercial editions</span>
+          </div>
+
+          <!-- Catalog Browser -->
+          <div class="feature-card bg-edna-surface rounded-xl p-6 reveal">
+            <div class="text-edna-green-light text-3xl mb-4">&#x1F333;</div>
+            <h3 class="text-lg font-bold mb-2">Catalog Browser</h3>
+            <p class="text-sm text-gray-400 mb-4">Single treeview of your entire SSIS Catalog. See every artifact, property, and configuration at a glance.</p>
+            <span class="text-xs text-edna-muted">Free</span>
+          </div>
+
+          <!-- Training -->
+          <div class="feature-card bg-edna-surface rounded-xl p-6 reveal">
+            <div class="text-edna-green-light text-3xl mb-4">&#x1F393;</div>
+            <h3 class="text-lg font-bold mb-2">SSIS Training</h3>
+            <p class="text-sm text-gray-400 mb-4">From Zero to SSIS, Expert SSIS, and Master the SSIS Catalog. Live and recorded courses from Andy Leonard.</p>
+            <span class="text-xs text-edna-muted">From $199/year</span>
+          </div>
+
+          <!-- DELM Suite / Fabric -->
+          <div class="feature-card bg-edna-surface rounded-xl p-6 reveal">
+            <div class="text-edna-green-light text-3xl mb-4">&#x2601;</div>
+            <h3 class="text-lg font-bold mb-2">DELM Suite</h3>
+            <p class="text-sm text-gray-400 mb-4">Moving to Microsoft Fabric? DELM Suite includes Fabric Navigator, Pipeline Navigator, and AI Playbook.</p>
+            <span class="text-xs text-edna-muted">Data Engineering Lifecycle Management</span>
+          </div>
+        </div>
+
+        <div class="text-center mt-12 reveal">
+          <a href="https://dilmsuite.com" target="_blank" rel="noopener" class="text-edna-green hover:text-edna-green-light transition-colors font-medium">
+            Explore the full DILM Suite &rarr;
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PRICING SECTION ===== -->
+    <section id="pricing" class="py-20 sm:py-28 px-6">
+      <div class="max-w-page mx-auto">
+        <div class="max-w-3xl mx-auto text-center mb-16 reveal">
+          <p class="text-edna-green font-mono text-sm tracking-wider uppercase mb-4">Pricing</p>
+          <h2 class="text-section font-bold mb-4">
+            Choose Your Edition
+          </h2>
+          <p class="text-sub text-gray-400">
+            Every edition includes the core SSIS Framework orchestration engine.
+          </p>
+        </div>
+
+        <!-- Pricing Grid -->
+        <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+
+          <!-- Standard -->
+          <div class="bg-edna-surface border border-edna-border rounded-xl p-8 reveal">
+            <h3 class="text-lg font-bold mb-2">Standard</h3>
+            <div class="mb-6">
+              <!-- PLACEHOLDER: Replace with actual pricing from Andy -->
+              <p class="text-3xl font-bold text-white">Contact Us</p>
+              <p class="text-sm text-edna-muted mt-1">for pricing</p>
+            </div>
+            <ul class="space-y-3 mb-8">
+              <li class="flex items-start gap-3 text-sm text-gray-300">
+                <span class="text-edna-green mt-0.5">&#x2714;</span>
+                Metadata-driven orchestration
+              </li>
+              <li class="flex items-start gap-3 text-sm text-gray-300">
+                <span class="text-edna-green mt-0.5">&#x2714;</span>
+                Cross-project execution
+              </li>
+              <li class="flex items-start gap-3 text-sm text-gray-300">
+                <span class="text-edna-green mt-0.5">&#x2714;</span>
+                Application restartability
+              </li>
+              <li class="flex items-start gap-3 text-sm text-gray-300">
+                <span class="text-edna-green mt-0.5">&#x2714;</span>
+                Centralized logging
+              </li>
+              <li class="flex items-start gap-3 text-sm text-gray-300">
+                <span class="text-edna-green mt-0.5">&#x2714;</span>
+                SSIS Framework Browser
+              </li>
+            </ul>
+            <a href="#contact" class="block text-center border border-edna-border text-white font-semibold px-6 py-3 rounded-lg hover:border-edna-green hover:text-edna-green transition-colors">
+              Contact EDNA
+            </a>
+          </div>
+
+          <!-- Professional (Featured) -->
+          <div class="bg-edna-surface border-2 border-edna-green rounded-xl p-8 relative reveal">
+            <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-edna-green text-black text-xs font-bold px-4 py-1 rounded-full">
+              Most Popular
+            </div>
+            <h3 class="text-lg font-bold mb-2">Professional</h3>
+            <div class="mb-6">
+              <!-- PLACEHOLDER: Replace with actual pricing from Andy -->
+              <p class="text-3xl font-bold text-white">Contact Us</p>
+              <p class="text-sm text-edna-muted mt-1">for pricing</p>
+            </div>
+            <ul class="space-y-3 mb-8">
+              <li class="flex items-start gap-3 text-sm text-gray-300">
+                <span class="text-edna-green mt-0.5">&#x2714;</span>
+                Everything in Standard
+              </li>
+              <li class="flex items-start gap-3 text-sm text-white font-medium">
+                <span class="text-edna-green mt-0.5">&#x2714;</span>
+                SSIS Framework Manager
+              </li>
+              <li class="flex items-start gap-3 text-sm text-white font-medium">
+                <span class="text-edna-green mt-0.5">&#x2714;</span>
+                Property overrides
+              </li>
+              <li class="flex items-start gap-3 text-sm text-white font-medium">
+                <span class="text-edna-green mt-0.5">&#x2714;</span>
+                T-SQL script generation
+              </li>
+              <li class="flex items-start gap-3 text-sm text-gray-300">
+                <span class="text-edna-green mt-0.5">&#x2714;</span>
+                Email support
+              </li>
+            </ul>
+            <a href="#contact" class="btn-primary block text-center bg-edna-green text-black font-bold px-6 py-3 rounded-lg hover:bg-edna-green-light">
+              Get Started
+            </a>
+          </div>
+
+          <!-- Enterprise -->
+          <div class="bg-edna-surface border border-edna-border rounded-xl p-8 reveal">
+            <h3 class="text-lg font-bold mb-2">Enterprise</h3>
+            <div class="mb-6">
+              <!-- PLACEHOLDER: Replace with actual pricing from Andy -->
+              <p class="text-3xl font-bold text-white">Contact Us</p>
+              <p class="text-sm text-edna-muted mt-1">for pricing</p>
+            </div>
+            <ul class="space-y-3 mb-8">
+              <li class="flex items-start gap-3 text-sm text-gray-300">
+                <span class="text-edna-green mt-0.5">&#x2714;</span>
+                Everything in Professional
+              </li>
+              <li class="flex items-start gap-3 text-sm text-white font-medium">
+                <span class="text-edna-green mt-0.5">&#x2714;</span>
+                Enhanced Catalog Reports
+              </li>
+              <li class="flex items-start gap-3 text-sm text-white font-medium">
+                <span class="text-edna-green mt-0.5">&#x2714;</span>
+                DILM Deployment Utility
+              </li>
+              <li class="flex items-start gap-3 text-sm text-white font-medium">
+                <span class="text-edna-green mt-0.5">&#x2714;</span>
+                Priority support
+              </li>
+              <li class="flex items-start gap-3 text-sm text-white font-medium">
+                <span class="text-edna-green mt-0.5">&#x2714;</span>
+                Custom consulting hours
+              </li>
+            </ul>
+            <a href="#contact" class="block text-center border border-edna-border text-white font-semibold px-6 py-3 rounded-lg hover:border-edna-green hover:text-edna-green transition-colors">
+              Contact EDNA
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== ABOUT / CREDIBILITY ===== -->
+    <section id="about" class="py-20 sm:py-28 px-6 bg-edna-dark/30">
+      <div class="max-w-page mx-auto">
+        <div class="grid md:grid-cols-2 gap-12 items-center max-w-5xl mx-auto">
+          <!-- Photo placeholder -->
+          <div class="reveal">
+            <div class="bg-edna-surface border border-edna-border rounded-xl aspect-square flex items-center justify-center">
+              <!-- PLACEHOLDER: Replace with Andy's actual photo -->
+              <div class="text-center p-8">
+                <div class="text-6xl mb-4">&#x1F468;&#x200D;&#x1F4BB;</div>
+                <p class="text-edna-muted text-sm">Andy Leonard's photo</p>
+                <p class="text-edna-muted text-xs mt-1">(placeholder)</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bio -->
+          <div class="reveal">
+            <p class="text-edna-green font-mono text-sm tracking-wider uppercase mb-4">About the Builder</p>
+            <h2 class="text-section font-bold mb-6">Andy Leonard</h2>
+            <p class="text-gray-400 leading-relaxed mb-6">
+              Andy Leonard is a Microsoft Data Platform MVP, BimlHero, and the Chief Data Engineer
+              at Enterprise Data & Analytics. He's authored or co-authored
+              <span class="text-white font-medium">12+ books</span> on data integration,
+              presented at <span class="text-white font-medium">100+ international conferences</span>,
+              and has been building SSIS solutions for over two decades.
+            </p>
+            <blockquote class="border-l-4 border-edna-green pl-6 py-2 mb-6 text-white italic">
+              "I Am Here To Help."
+            </blockquote>
+            <p class="text-gray-400 leading-relaxed mb-8">
+              Andy literally <span class="text-white">wrote the book</span> on SSIS frameworks.
+              His "Data Integration Life Cycle Management with SSIS" (Apress) is the definitive guide
+              to managing SSIS in the enterprise. The SSIS Framework is the culmination of
+              decades of real-world consulting distilled into tooling you can deploy today.
+            </p>
+
+            <!-- Credential badges -->
+            <div class="flex flex-wrap gap-3">
+              <span class="bg-edna-surface border border-edna-border px-4 py-2 rounded-full text-sm text-gray-300">Microsoft MVP</span>
+              <span class="bg-edna-surface border border-edna-border px-4 py-2 rounded-full text-sm text-gray-300">BimlHero</span>
+              <span class="bg-edna-surface border border-edna-border px-4 py-2 rounded-full text-sm text-gray-300">12+ Books</span>
+              <span class="bg-edna-surface border border-edna-border px-4 py-2 rounded-full text-sm text-gray-300">SQLBits Speaker</span>
+              <span class="bg-edna-surface border border-edna-border px-4 py-2 rounded-full text-sm text-gray-300">PASS Speaker</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TESTIMONIALS ===== -->
+    <section id="testimonials" class="py-20 sm:py-28 px-6">
+      <div class="max-w-page mx-auto">
+        <div class="max-w-3xl mx-auto text-center mb-16 reveal">
+          <p class="text-edna-green font-mono text-sm tracking-wider uppercase mb-4">What People Say</p>
+          <h2 class="text-section font-bold">Trusted by Data Engineers</h2>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          <!-- Testimonial 1 - Real quote from Catalog Compare -->
+          <div class="bg-edna-surface border border-edna-border rounded-xl p-6 reveal">
+            <div class="flex gap-1 mb-4 text-amber-400">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</div>
+            <p class="text-gray-300 text-sm leading-relaxed mb-6">
+              "Reduced 400+ package deployments from hours to 3-5 minutes per package with repeatable results."
+            </p>
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-edna-green/20 rounded-full flex items-center justify-center text-edna-green font-bold text-sm">DA</div>
+              <div>
+                <p class="text-sm font-semibold text-white">Data Architect</p>
+                <p class="text-xs text-edna-muted">Enterprise Client</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- PLACEHOLDER Testimonial 2 -->
+          <div class="bg-edna-surface border border-edna-border rounded-xl p-6 reveal">
+            <div class="flex gap-1 mb-4 text-amber-400">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</div>
+            <p class="text-gray-300 text-sm leading-relaxed mb-6">
+              <!-- PLACEHOLDER: Replace with real testimonial from Andy -->
+              "The SSIS Framework transformed how we manage our nightly ETL. What used to be a nightmare of SQL Agent jobs is now a single, auditable command."
+            </p>
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-edna-green/20 rounded-full flex items-center justify-center text-edna-green font-bold text-sm">SE</div>
+              <div>
+                <p class="text-sm font-semibold text-white">Senior ETL Developer</p>
+                <p class="text-xs text-edna-muted"><!-- PLACEHOLDER: Company --></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- PLACEHOLDER Testimonial 3 -->
+          <div class="bg-edna-surface border border-edna-border rounded-xl p-6 reveal">
+            <div class="flex gap-1 mb-4 text-amber-400">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</div>
+            <p class="text-gray-300 text-sm leading-relaxed mb-6">
+              <!-- PLACEHOLDER: Replace with real testimonial from Andy -->
+              "Andy's framework and training helped our team go from zero SSIS knowledge to production-ready pipelines in weeks."
+            </p>
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-edna-green/20 rounded-full flex items-center justify-center text-edna-green font-bold text-sm">DM</div>
+              <div>
+                <p class="text-sm font-semibold text-white">Data Manager</p>
+                <p class="text-xs text-edna-muted"><!-- PLACEHOLDER: Company --></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== NEWSLETTER ===== -->
+    <section id="newsletter" class="py-20 px-6 bg-edna-dark/30">
+      <div class="max-w-2xl mx-auto text-center reveal">
+        <p class="text-edna-green font-mono text-sm tracking-wider uppercase mb-4">Stay Connected</p>
+        <h2 class="text-2xl sm:text-3xl font-bold mb-4">Engineer of Data Newsletter</h2>
+        <p class="text-gray-400 mb-6">Join data engineers who read about:</p>
+        <div class="flex flex-wrap gap-3 justify-center mb-8">
+          <span class="bg-edna-surface border border-edna-border px-4 py-1.5 rounded-full text-sm text-gray-300">SSIS Modernization</span>
+          <span class="bg-edna-surface border border-edna-border px-4 py-1.5 rounded-full text-sm text-gray-300">Fabric Data Factory</span>
+          <span class="bg-edna-surface border border-edna-border px-4 py-1.5 rounded-full text-sm text-gray-300">ADF Patterns</span>
+          <span class="bg-edna-surface border border-edna-border px-4 py-1.5 rounded-full text-sm text-gray-300">Data Architecture</span>
+        </div>
+        <!-- Newsletter CTA - links to Substack for now -->
+        <a href="https://andyleonard.substack.com" target="_blank" rel="noopener"
+           class="btn-primary inline-block bg-edna-green text-black font-bold px-8 py-4 rounded-lg text-lg hover:bg-edna-green-light">
+          Subscribe on Substack
+        </a>
+      </div>
+    </section>
+
+    <!-- ===== FAQ ===== -->
+    <section id="faq" class="py-20 sm:py-28 px-6">
+      <div class="max-w-3xl mx-auto">
+        <div class="text-center mb-16 reveal">
+          <p class="text-edna-green font-mono text-sm tracking-wider uppercase mb-4">FAQ</p>
+          <h2 class="text-section font-bold">Common Questions</h2>
+        </div>
+
+        <div class="space-y-4 reveal" id="faq-list">
+          <div class="faq-item border border-edna-border rounded-lg">
+            <button class="faq-toggle w-full flex items-center justify-between p-5 text-left" aria-expanded="false">
+              <span class="font-semibold text-white pr-4">What SQL Server versions does SSIS Framework support?</span>
+              <span class="faq-chevron text-edna-muted flex-shrink-0">&#x25BC;</span>
+            </button>
+            <div class="faq-answer px-5">
+              <p class="text-gray-400 text-sm leading-relaxed">
+                SSIS Framework supports SQL Server 2012 and later, including SQL Server 2016, 2017, 2019, 2022, and 2025.
+                It also works with Azure Data Factory's SSIS Integration Runtime for cloud deployments.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item border border-edna-border rounded-lg">
+            <button class="faq-toggle w-full flex items-center justify-between p-5 text-left" aria-expanded="false">
+              <span class="font-semibold text-white pr-4">How long does implementation take?</span>
+              <span class="faq-chevron text-edna-muted flex-shrink-0">&#x25BC;</span>
+            </button>
+            <div class="faq-answer px-5">
+              <p class="text-gray-400 text-sm leading-relaxed">
+                The SSIS Framework can be deployed and configured in a single day for most environments.
+                For complex enterprise deployments with hundreds of packages, EDNA offers consulting
+                to accelerate the process.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item border border-edna-border rounded-lg">
+            <button class="faq-toggle w-full flex items-center justify-between p-5 text-left" aria-expanded="false">
+              <span class="font-semibold text-white pr-4">Does it work with existing SSIS Catalog deployments?</span>
+              <span class="faq-chevron text-edna-muted flex-shrink-0">&#x25BC;</span>
+            </button>
+            <div class="faq-answer px-5">
+              <p class="text-gray-400 text-sm leading-relaxed">
+                Yes. SSIS Framework integrates directly with your existing SSISDB. It adds orchestration
+                on top of what the Catalog already provides&mdash;deployment, environments, and configuration
+                all continue to work as expected.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item border border-edna-border rounded-lg">
+            <button class="faq-toggle w-full flex items-center justify-between p-5 text-left" aria-expanded="false">
+              <span class="font-semibold text-white pr-4">What if we're planning to migrate to Microsoft Fabric?</span>
+              <span class="faq-chevron text-edna-muted flex-shrink-0">&#x25BC;</span>
+            </button>
+            <div class="faq-answer px-5">
+              <p class="text-gray-400 text-sm leading-relaxed">
+                SSIS Framework is not a competing investment&mdash;it's a bridge. Many enterprises will run SSIS
+                for years during migration. The Framework keeps your existing SSIS estate healthy while you plan your
+                Fabric transition. EDNA also offers the DELM Suite for Fabric-specific tooling.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item border border-edna-border rounded-lg">
+            <button class="faq-toggle w-full flex items-center justify-between p-5 text-left" aria-expanded="false">
+              <span class="font-semibold text-white pr-4">What's the difference between editions?</span>
+              <span class="faq-chevron text-edna-muted flex-shrink-0">&#x25BC;</span>
+            </button>
+            <div class="faq-answer px-5">
+              <p class="text-gray-400 text-sm leading-relaxed">
+                All editions include the core orchestration engine. Professional adds the visual Framework Manager,
+                property overrides, and script generation. Enterprise adds Enhanced Catalog Reports, the DILM
+                Deployment Utility, and priority consulting support.
+                <a href="#pricing" class="text-edna-green hover:underline ml-1">See full comparison &uarr;</a>
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item border border-edna-border rounded-lg">
+            <button class="faq-toggle w-full flex items-center justify-between p-5 text-left" aria-expanded="false">
+              <span class="font-semibold text-white pr-4">Do you offer training?</span>
+              <span class="faq-chevron text-edna-muted flex-shrink-0">&#x25BC;</span>
+            </button>
+            <div class="faq-answer px-5">
+              <p class="text-gray-400 text-sm leading-relaxed">
+                Yes. EDNA offers multiple SSIS training courses, from "From Zero to SSIS" for beginners to
+                "Expert SSIS" for enterprise-scale design patterns and DevOps. Training is available live
+                or as recorded courses starting at $199/year.
+                <a href="https://entdna.com" target="_blank" rel="noopener" class="text-edna-green hover:underline ml-1">View courses &rarr;</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FINAL CTA ===== -->
+    <section id="contact" class="py-20 sm:py-28 px-6 bg-gradient-to-b from-edna-dark/30 to-edna-green/5 border-t border-edna-border">
+      <div class="max-w-3xl mx-auto text-center reveal">
+        <h2 class="text-section font-bold mb-6">
+          Ready to Complete Your SSIS Catalog?
+        </h2>
+        <p class="text-sub text-gray-400 mb-10 leading-relaxed">
+          Schedule a consultation with Andy Leonard and the EDNA team.
+          We'll review your SSIS estate and show you how the Framework fits.
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+          <a href="https://calendly.com/entdna" target="_blank" rel="noopener"
+             class="btn-primary bg-edna-green text-black font-bold px-8 py-4 rounded-lg text-lg hover:bg-edna-green-light">
+            Schedule a Consultation
+          </a>
+          <a href="mailto:info@entdna.com"
+             class="border border-edna-border text-white font-semibold px-8 py-4 rounded-lg text-lg hover:border-edna-green hover:text-edna-green transition-colors">
+            Email Us
+          </a>
+        </div>
+
+        <p class="text-sm text-edna-muted">
+          Or email directly: <a href="mailto:info@entdna.com" class="text-edna-green hover:underline">info@entdna.com</a>
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="border-t border-edna-border py-12 px-6">
+    <div class="max-w-page mx-auto">
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+        <!-- Brand -->
+        <div>
+          <p class="text-xl font-bold text-white mb-3">EDNA</p>
+          <p class="text-sm text-edna-muted leading-relaxed">
+            Enterprise Data & Analytics. We deliver data.
+          </p>
+        </div>
+
+        <!-- Products -->
+        <div>
+          <p class="text-sm font-semibold text-white mb-3">Products</p>
+          <ul class="space-y-2">
+            <li><a href="https://dilmsuite.com" target="_blank" rel="noopener" class="text-sm text-edna-muted hover:text-edna-green transition-colors">DILM Suite</a></li>
+            <li><a href="https://delmsuite.com" target="_blank" rel="noopener" class="text-sm text-edna-muted hover:text-edna-green transition-colors">DELM Suite</a></li>
+            <li><a href="https://entdna.com" target="_blank" rel="noopener" class="text-sm text-edna-muted hover:text-edna-green transition-colors">Training Courses</a></li>
+          </ul>
+        </div>
+
+        <!-- Resources -->
+        <div>
+          <p class="text-sm font-semibold text-white mb-3">Resources</p>
+          <ul class="space-y-2">
+            <li><a href="https://andyleonard.blog" target="_blank" rel="noopener" class="text-sm text-edna-muted hover:text-edna-green transition-colors">Andy's Blog</a></li>
+            <li><a href="https://andyleonard.substack.com" target="_blank" rel="noopener" class="text-sm text-edna-muted hover:text-edna-green transition-colors">Newsletter</a></li>
+            <li><a href="#faq" class="text-sm text-edna-muted hover:text-edna-green transition-colors">FAQ</a></li>
+          </ul>
+        </div>
+
+        <!-- Social -->
+        <div>
+          <p class="text-sm font-semibold text-white mb-3">Connect</p>
+          <ul class="space-y-2">
+            <li><a href="https://linkedin.com/in/andyleonard" target="_blank" rel="noopener" class="text-sm text-edna-muted hover:text-edna-green transition-colors">LinkedIn</a></li>
+            <li><a href="https://x.com/andyleonard" target="_blank" rel="noopener" class="text-sm text-edna-muted hover:text-edna-green transition-colors">X (Twitter)</a></li>
+            <li><a href="mailto:info@entdna.com" class="text-sm text-edna-muted hover:text-edna-green transition-colors">info@entdna.com</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="border-t border-edna-border pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p class="text-xs text-edna-muted">&copy; 2026 Enterprise Data & Analytics. All rights reserved.</p>
+        <div class="flex gap-6">
+          <a href="privacy.html" class="text-xs text-edna-muted hover:text-edna-green transition-colors">Privacy Policy</a>
+          <a href="#" class="text-xs text-edna-muted hover:text-edna-green transition-colors">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========== SCRIPTS ========== -->
+  <script>
+    // Mobile menu toggle
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const menuIcon = document.getElementById('menu-icon');
+
+    menuBtn.addEventListener('click', () => {
+      const isOpen = !mobileMenu.classList.contains('hidden');
+      mobileMenu.classList.toggle('hidden');
+      menuBtn.setAttribute('aria-expanded', !isOpen);
+      menuIcon.setAttribute('d', isOpen
+        ? 'M4 6h16M4 12h16M4 18h16'
+        : 'M6 18L18 6M6 6l12 12'
+      );
+    });
+
+    // Close mobile menu on link click
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+        menuBtn.setAttribute('aria-expanded', 'false');
+        menuIcon.setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
+      });
+    });
+
+    // Close mobile menu on Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !mobileMenu.classList.contains('hidden')) {
+        mobileMenu.classList.add('hidden');
+        menuBtn.setAttribute('aria-expanded', 'false');
+        menuIcon.setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
+        menuBtn.focus();
+      }
+    });
+
+    // Sticky nav background on scroll
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('nav-scrolled', window.scrollY > 50);
+    }, { passive: true });
+
+    // Scroll reveal (IntersectionObserver)
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    } else {
+      // Reduced motion: show everything immediately
+      document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+    }
+
+    // FAQ accordion
+    document.querySelectorAll('.faq-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.closest('.faq-item');
+        const isOpen = item.classList.contains('open');
+
+        // Close all others
+        document.querySelectorAll('.faq-item.open').forEach(openItem => {
+          if (openItem !== item) {
+            openItem.classList.remove('open');
+            openItem.querySelector('.faq-toggle').setAttribute('aria-expanded', 'false');
+          }
+        });
+
+        // Toggle current
+        item.classList.toggle('open');
+        btn.setAttribute('aria-expanded', !isOpen);
+      });
+    });
+  </script>
+
+</body>
+</html>
