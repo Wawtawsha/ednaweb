@@ -920,11 +920,30 @@
           <span class="bg-edna-surface border border-edna-border px-4 py-1.5 rounded-full text-sm text-gray-300">ADF Patterns</span>
           <span class="bg-edna-surface border border-edna-border px-4 py-1.5 rounded-full text-sm text-gray-300">Data Architecture</span>
         </div>
-        <!-- Newsletter CTA - links to Substack for now -->
-        <a href="https://andyleonard.substack.com" target="_blank" rel="noopener"
-           class="btn-primary inline-block bg-edna-green text-black font-bold px-8 py-4 rounded-lg text-lg hover:bg-edna-green-light">
-          Subscribe on Substack
-        </a>
+
+        <!-- Newsletter signup form -->
+        <form id="newsletter-form" class="max-w-md mx-auto" novalidate>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <label for="newsletter-email" class="sr-only">Email address</label>
+            <input
+              type="email"
+              id="newsletter-email"
+              name="email"
+              required
+              placeholder="your@email.com"
+              autocomplete="email"
+              class="flex-1 bg-edna-surface border border-edna-border rounded-lg px-4 py-3 text-white placeholder-edna-muted text-sm focus:outline-none focus:border-edna-green transition-colors"
+            >
+            <button type="submit" class="btn-primary bg-edna-green text-black font-bold px-6 py-3 rounded-lg text-sm hover:bg-edna-green-light whitespace-nowrap">
+              Subscribe
+            </button>
+          </div>
+          <p id="newsletter-msg" class="text-sm mt-3 hidden"></p>
+        </form>
+
+        <p class="text-xs text-edna-muted mt-4">
+          Or subscribe directly on <a href="https://andyleonard.substack.com" target="_blank" rel="noopener" class="text-edna-green hover:underline">Substack</a>. No spam, unsubscribe anytime.
+        </p>
       </div>
     </section>
 
@@ -1025,31 +1044,85 @@
       </div>
     </section>
 
-    <!-- ===== FINAL CTA ===== -->
+    <!-- ===== FINAL CTA / CONTACT ===== -->
     <section id="contact" class="py-20 sm:py-28 px-6 bg-gradient-to-b from-edna-dark/30 to-edna-green/5 border-t border-edna-border">
-      <div class="max-w-3xl mx-auto text-center reveal">
-        <h2 class="text-section font-bold mb-6">
-          Ready to Complete Your SSIS Catalog?
-        </h2>
-        <p class="text-sub text-gray-400 mb-10 leading-relaxed">
-          Schedule a consultation with Andy Leonard and the EDNA team.
-          We'll review your SSIS estate and show you how the Framework fits.
-        </p>
-
-        <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-          <a href="https://calendly.com/entdna" target="_blank" rel="noopener"
-             class="btn-primary bg-edna-green text-black font-bold px-8 py-4 rounded-lg text-lg hover:bg-edna-green-light">
-            Schedule a Consultation
-          </a>
-          <a href="mailto:info@entdna.com"
-             class="border border-edna-border text-white font-semibold px-8 py-4 rounded-lg text-lg hover:border-edna-green hover:text-edna-green transition-colors">
-            Email Us
-          </a>
+      <div class="max-w-5xl mx-auto">
+        <div class="text-center mb-16 reveal">
+          <h2 class="text-section font-bold mb-6">
+            Ready to Complete Your SSIS Catalog?
+          </h2>
+          <p class="text-sub text-gray-400 leading-relaxed">
+            Schedule a consultation or send us a message. We'll review your SSIS estate
+            and show you how the Framework fits.
+          </p>
         </div>
 
-        <p class="text-sm text-edna-muted">
-          Or email directly: <a href="mailto:info@entdna.com" class="text-edna-green hover:underline">info@entdna.com</a>
-        </p>
+        <div class="grid md:grid-cols-2 gap-12 items-start">
+          <!-- Contact Form -->
+          <div class="reveal">
+            <h3 class="text-xl font-bold mb-6">Send Us a Message</h3>
+            <form id="contact-form" class="space-y-4" novalidate>
+              <div>
+                <label for="contact-name" class="block text-sm text-gray-400 mb-1.5">Name</label>
+                <input type="text" id="contact-name" name="name" required autocomplete="name"
+                  class="w-full bg-edna-surface border border-edna-border rounded-lg px-4 py-3 text-white placeholder-edna-muted text-sm focus:outline-none focus:border-edna-green transition-colors"
+                  placeholder="Your name">
+              </div>
+              <div>
+                <label for="contact-email" class="block text-sm text-gray-400 mb-1.5">Email</label>
+                <input type="email" id="contact-email" name="email" required autocomplete="email"
+                  class="w-full bg-edna-surface border border-edna-border rounded-lg px-4 py-3 text-white placeholder-edna-muted text-sm focus:outline-none focus:border-edna-green transition-colors"
+                  placeholder="your@email.com">
+              </div>
+              <div>
+                <label for="contact-company" class="block text-sm text-gray-400 mb-1.5">Company <span class="text-edna-muted">(optional)</span></label>
+                <input type="text" id="contact-company" name="company" autocomplete="organization"
+                  class="w-full bg-edna-surface border border-edna-border rounded-lg px-4 py-3 text-white placeholder-edna-muted text-sm focus:outline-none focus:border-edna-green transition-colors"
+                  placeholder="Your company">
+              </div>
+              <button type="submit" class="btn-primary w-full bg-edna-green text-black font-bold px-6 py-3 rounded-lg text-sm hover:bg-edna-green-light">
+                Send Message
+              </button>
+              <p id="contact-msg" class="text-sm hidden"></p>
+            </form>
+          </div>
+
+          <!-- Calendly + Info -->
+          <div class="reveal">
+            <h3 class="text-xl font-bold mb-6">Book a Consultation</h3>
+            <p class="text-gray-400 text-sm leading-relaxed mb-6">
+              Meet with Andy Leonard and the EDNA team to review your SSIS environment.
+              We'll assess your orchestration needs and walk you through SSIS Framework.
+            </p>
+
+            <!-- Calendly embed placeholder -->
+            <div id="calendly-embed" class="mb-6">
+              <!-- PLACEHOLDER: Replace calendly.com/entdna with your actual Calendly URL -->
+              <a href="https://calendly.com/entdna" target="_blank" rel="noopener"
+                 class="btn-primary flex items-center justify-center gap-3 bg-edna-green text-black font-bold px-8 py-4 rounded-lg text-lg hover:bg-edna-green-light w-full">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                Schedule on Calendly
+              </a>
+            </div>
+
+            <div class="border-t border-edna-border pt-6 space-y-4">
+              <div class="flex items-center gap-3">
+                <span class="text-edna-green text-lg">&#x2709;</span>
+                <div>
+                  <p class="text-sm text-gray-400">Email us directly</p>
+                  <a href="mailto:info@entdna.com" class="text-edna-green hover:underline text-sm">info@entdna.com</a>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="text-edna-green text-lg">&#x1F4AC;</span>
+                <div>
+                  <p class="text-sm text-gray-400">Join the community</p>
+                  <a href="https://dilmsuite.slack.com" target="_blank" rel="noopener" class="text-edna-green hover:underline text-sm">DILM Suite Slack</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -1185,6 +1258,111 @@
         item.classList.toggle('open');
         btn.setAttribute('aria-expanded', !isOpen);
       });
+    });
+
+    // ==========================================
+    // FORM HANDLERS (Newsletter + Contact)
+    // ==========================================
+    const LEAD_ENDPOINT = 'https://rjudjhjcfivugbyztnce.supabase.co/functions/v1/submit-lead';
+    const LEAD_CLIENT_ID = '00000000-0000-0000-0000-000000000000'; // PLACEHOLDER: Replace with EDNA's Nessus client ID
+
+    function isValidEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function showMsg(el, text, isError) {
+      el.textContent = text;
+      el.className = 'text-sm mt-3 ' + (isError ? 'text-edna-rose' : 'text-edna-green');
+      el.classList.remove('hidden');
+    }
+
+    async function submitLead(data) {
+      if (LEAD_CLIENT_ID === '00000000-0000-0000-0000-000000000000') {
+        // Placeholder mode — simulate success
+        return { ok: true };
+      }
+      return fetch(LEAD_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ client_id: LEAD_CLIENT_ID, ...data }),
+        keepalive: true,
+      });
+    }
+
+    // --- Newsletter form ---
+    const newsletterForm = document.getElementById('newsletter-form');
+    const newsletterMsg = document.getElementById('newsletter-msg');
+
+    newsletterForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('newsletter-email').value.trim();
+
+      if (!email || !isValidEmail(email)) {
+        showMsg(newsletterMsg, 'Please enter a valid email address.', true);
+        return;
+      }
+
+      const btn = newsletterForm.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.textContent = 'Subscribing...';
+
+      try {
+        await submitLead({
+          email,
+          source: 'newsletter',
+          page_path: window.location.pathname,
+          website_label: 'edna-ssis-framework',
+        });
+        showMsg(newsletterMsg, 'Thanks for subscribing! Check your inbox.', false);
+        newsletterForm.reset();
+      } catch {
+        showMsg(newsletterMsg, 'Something went wrong. Try subscribing on Substack instead.', true);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Subscribe';
+      }
+    });
+
+    // --- Contact form ---
+    const contactForm = document.getElementById('contact-form');
+    const contactMsg = document.getElementById('contact-msg');
+
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('contact-name').value.trim();
+      const email = document.getElementById('contact-email').value.trim();
+      const company = document.getElementById('contact-company').value.trim();
+
+      if (!name) {
+        showMsg(contactMsg, 'Please enter your name.', true);
+        return;
+      }
+      if (!email || !isValidEmail(email)) {
+        showMsg(contactMsg, 'Please enter a valid email address.', true);
+        return;
+      }
+
+      const btn = contactForm.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+
+      try {
+        await submitLead({
+          name,
+          email,
+          company: company || undefined,
+          source: 'contact_form',
+          page_path: window.location.pathname,
+          website_label: 'edna-ssis-framework',
+        });
+        showMsg(contactMsg, 'Message sent! We\'ll be in touch shortly.', false);
+        contactForm.reset();
+      } catch {
+        showMsg(contactMsg, 'Something went wrong. Please email info@entdna.com instead.', true);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Send Message';
+      }
     });
   </script>
 
