@@ -311,16 +311,36 @@
           </div>
         </div>
 
-        <!-- Code Snippet -->
+        <!-- Execution Methods Tabs -->
         <div class="animate-slide-up max-w-2xl mx-auto">
           <div class="bg-edna-surface border border-edna-border rounded-xl overflow-hidden">
-            <div class="flex items-center gap-2 px-4 py-3 border-b border-edna-border">
-              <div class="w-3 h-3 rounded-full bg-red-500/60"></div>
-              <div class="w-3 h-3 rounded-full bg-yellow-500/60"></div>
-              <div class="w-3 h-3 rounded-full bg-green-500/60"></div>
-              <span class="text-xs text-edna-muted font-mono ml-2">SSMS &mdash; Execute SSIS Application</span>
+            <!-- Tab Headers -->
+            <div class="flex border-b border-edna-border">
+              <button class="hero-tab active flex-1 px-4 py-3 text-xs sm:text-sm font-semibold text-edna-green border-b-2 border-edna-green transition-colors" data-tab="scheduler">
+                Schedule It
+              </button>
+              <button class="hero-tab flex-1 px-4 py-3 text-xs sm:text-sm font-semibold text-edna-muted border-b-2 border-transparent hover:text-gray-300 transition-colors" data-tab="right-click">
+                Right-Click Execute
+              </button>
+              <button class="hero-tab flex-1 px-4 py-3 text-xs sm:text-sm font-semibold text-edna-muted border-b-2 border-transparent hover:text-gray-300 transition-colors" data-tab="tsql">
+                T-SQL Command
+              </button>
             </div>
-            <div class="p-6 font-mono text-sm sm:text-base leading-relaxed text-left overflow-x-auto">
+            <!-- Tab: Schedule It -->
+            <div class="hero-tab-content active p-4 sm:p-6 flex flex-col items-center" id="tab-scheduler">
+              <img src="assets/images/ExecuteUsingGUICmd-2.png" alt="SSIS Framework Manager — Execute Command field showing the full T-SQL command ready to copy into SQL Agent or any scheduler" class="rounded-lg max-w-full h-auto shadow-lg mb-4" />
+              <div class="w-full bg-black/40 border border-edna-green/30 rounded-lg px-4 py-3 font-mono text-xs sm:text-sm text-left overflow-x-auto">
+                <span class="code-keyword">Exec</span> <span class="code-function">custom</span>.<span class="code-function">execute_catalog_parent_package</span> <span class="code-param">@ApplicationName</span> = <span class="code-string">N'Range Loader'</span>
+              </div>
+              <p class="text-xs text-edna-muted mt-3">Copy the generated command directly into SQL Agent, cron, or any scheduler.</p>
+            </div>
+            <!-- Tab: Right-Click Execute -->
+            <div class="hero-tab-content hidden p-4 sm:p-6 flex flex-col items-center" id="tab-right-click">
+              <img src="assets/images/ExecuteFromGUI.png" alt="SSIS Framework Manager — right-click an application and choose Execute, Fire and Forget, or Script" class="rounded-lg max-w-full h-auto shadow-lg" />
+              <p class="text-xs text-edna-muted mt-3">Right-click any application &rarr; Execute. That's it.</p>
+            </div>
+            <!-- Tab: T-SQL Command -->
+            <div class="hero-tab-content hidden p-6 font-mono text-sm sm:text-base leading-relaxed text-left overflow-x-auto" id="tab-tsql">
               <p class="code-comment">-- Execute your entire SSIS application</p>
               <p class="code-comment">-- with a single command</p>
               <p class="mt-3">
@@ -1185,6 +1205,20 @@
 
   <!-- ========== SCRIPTS ========== -->
   <script>
+    // Hero execution method tabs
+    document.querySelectorAll('.hero-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.hero-tab').forEach(t => {
+          t.classList.remove('active', 'text-edna-green', 'border-edna-green');
+          t.classList.add('text-edna-muted', 'border-transparent');
+        });
+        tab.classList.add('active', 'text-edna-green', 'border-edna-green');
+        tab.classList.remove('text-edna-muted', 'border-transparent');
+        document.querySelectorAll('.hero-tab-content').forEach(c => c.classList.add('hidden'));
+        document.getElementById('tab-' + tab.dataset.tab).classList.remove('hidden');
+      });
+    });
+
     // Mobile menu toggle
     const menuBtn = document.getElementById('mobile-menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');

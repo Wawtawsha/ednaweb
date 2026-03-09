@@ -1,4 +1,8 @@
-# CLAUDE.md - EDNA SSIS Framework Landing Page
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+# EDNA SSIS Framework Landing Page
 
 ## Project Overview
 
@@ -139,6 +143,8 @@ Both forms POST to Nessus CRM submit-lead endpoint:
 - Contact email: `info@entdna.com`
 
 ## Development
+
+**No build step, no linter, no test suite.** This is a static site — just HTML files served directly.
 
 ### Local Development
 ```bash
