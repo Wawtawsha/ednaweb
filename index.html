@@ -328,7 +328,7 @@
             </div>
             <!-- Tab: Schedule It -->
             <div class="hero-tab-content active p-4 sm:p-6 flex flex-col items-center" id="tab-scheduler">
-              <img src="assets/images/ExecuteUsingGUICmd-2.png" alt="SSIS Framework Manager — Execute Command field showing the full T-SQL command ready to copy into SQL Agent or any scheduler" class="rounded-lg max-w-full h-auto shadow-lg mb-4" />
+              <img src="assets/images/ExecuteUsingGUICommand.png" alt="SSIS Framework Manager — Execute Command field showing the full T-SQL command ready to copy into SQL Agent or any scheduler" class="rounded-lg max-w-full h-auto shadow-lg mb-4" />
               <div class="w-full bg-black/40 border border-edna-green/30 rounded-lg px-4 py-3 font-mono text-xs sm:text-sm text-left overflow-x-auto">
                 <span class="code-keyword">Exec</span> <span class="code-function">custom</span>.<span class="code-function">execute_catalog_parent_package</span> <span class="code-param">@ApplicationName</span> = <span class="code-string">N'Range Loader'</span>
               </div>
@@ -456,14 +456,23 @@
           </p>
         </div>
 
-        <!-- Before / After -->
-        <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto reveal">
-          <!-- Before -->
-          <div class="bg-edna-surface border border-edna-rose/30 rounded-xl overflow-hidden">
-            <div class="px-4 py-3 border-b border-edna-border flex items-center gap-2">
-              <span class="text-edna-rose font-semibold text-sm">Before: Manual Orchestration</span>
+        <!-- Before / After Tabs -->
+        <div class="max-w-4xl mx-auto reveal">
+          <div class="bg-edna-surface border border-edna-border rounded-xl overflow-hidden">
+            <!-- Tab Headers -->
+            <div class="flex border-b border-edna-border">
+              <button class="solution-tab active flex-1 px-3 py-3 text-xs sm:text-sm font-semibold text-edna-green border-b-2 border-edna-green transition-colors" data-solution="before">
+                Before: Manual Orchestration
+              </button>
+              <button class="solution-tab flex-1 px-3 py-3 text-xs sm:text-sm font-semibold text-edna-muted border-b-2 border-transparent hover:text-gray-300 transition-colors" data-solution="framework">
+                SSIS Framework
+              </button>
+              <button class="solution-tab flex-1 px-3 py-3 text-xs sm:text-sm font-semibold text-edna-muted border-b-2 border-transparent hover:text-gray-300 transition-colors" data-solution="core">
+                Framework Core
+              </button>
             </div>
-            <div class="p-5 font-mono text-xs sm:text-sm leading-relaxed text-gray-400 overflow-x-auto">
+            <!-- Tab: Before (Manual Orchestration) -->
+            <div class="solution-tab-content active p-5 font-mono text-xs sm:text-sm leading-relaxed text-gray-400 overflow-x-auto" id="solution-before">
               <p class="code-comment">-- Package 1 of 71...</p>
               <p><span class="code-keyword">EXEC</span> [SSISDB].[catalog].[create_execution]</p>
               <p class="pl-4"><span class="code-param">@package_name</span> = <span class="code-string">'Extract_Customers.dtsx'</span>,</p>
@@ -475,14 +484,12 @@
               <p class="code-comment">-- Now repeat for packages 2 through 71</p>
               <p class="mt-2 text-edna-rose">-- 500+ lines of brittle T-SQL</p>
             </div>
-          </div>
-
-          <!-- After -->
-          <div class="bg-edna-surface border border-edna-green/30 rounded-xl overflow-hidden">
-            <div class="px-4 py-3 border-b border-edna-border flex items-center gap-2">
-              <span class="text-edna-green font-semibold text-sm">After: SSIS Framework</span>
+            <!-- Tab: SSIS Framework (GUI Command) -->
+            <div class="solution-tab-content hidden p-4 sm:p-5 flex flex-col items-center" id="solution-framework">
+              <img src="assets/images/ExecuteUsingGUICommand.png" alt="SSIS Framework Manager — Execute Command field showing the full T-SQL command ready to copy into SQL Agent or any scheduler" class="rounded-lg max-w-full h-auto shadow-lg" />
             </div>
-            <div class="p-5 font-mono text-xs sm:text-sm leading-relaxed overflow-x-auto">
+            <!-- Tab: Framework Core (T-SQL) -->
+            <div class="solution-tab-content hidden p-5 font-mono text-xs sm:text-sm leading-relaxed overflow-x-auto" id="solution-core">
               <p class="code-comment">-- All 71 packages. One command.</p>
               <p class="mt-3">
                 <span class="code-keyword">EXEC</span> <span class="code-function">custom</span>.<span class="code-function">execute_catalog_parent_package</span>
@@ -509,6 +516,28 @@
           <h2 class="text-section font-bold">
             Built for How You Actually Work
           </h2>
+        </div>
+
+        <!-- Tabbed showcase -->
+        <div class="max-w-5xl mx-auto mb-16 reveal">
+          <div class="flex border-b border-edna-border mb-0">
+            <button id="tab-ssis-framework" class="feature-tab px-6 py-3 text-sm font-medium border-b-2 border-edna-green text-white" onclick="switchFeatureTab('ssis-framework')">SSIS Framework</button>
+            <button id="tab-framework-core" class="feature-tab px-6 py-3 text-sm font-medium border-b-2 border-transparent text-edna-muted hover:text-gray-300 transition-colors" onclick="switchFeatureTab('framework-core')">Framework Core</button>
+          </div>
+          <div class="bg-edna-surface border border-edna-border border-t-0 rounded-b-lg overflow-hidden">
+            <div id="panel-ssis-framework" class="feature-tab-panel flex justify-center p-6">
+              <video src="assets/video/AddAppPkg.mp4" autoplay loop muted playsinline controls class="max-w-2xl w-full rounded" aria-label="SSIS Framework — Adding an application package"></video>
+            </div>
+            <div id="panel-framework-core" class="feature-tab-panel hidden">
+              <div class="p-6 font-mono text-sm text-gray-300">
+                <p class="code-comment">-- Add a package to your application:</p>
+                <p class="mt-2"><span class="code-keyword">INSERT INTO</span> custom.ApplicationPackages</p>
+                <p class="pl-4">(ApplicationName, PackageName, ExecutionOrder)</p>
+                <p><span class="code-keyword">VALUES</span></p>
+                <p class="pl-4">(<span class="code-string">'My ETL'</span>, <span class="code-string">'Load_Products.dtsx'</span>, <span class="text-amber-400">15</span>)</p>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Chess layout features -->
@@ -1218,6 +1247,37 @@
         document.getElementById('tab-' + tab.dataset.tab).classList.remove('hidden');
       });
     });
+
+    // Solution section tabs (Before / SSIS Framework / Framework Core)
+    document.querySelectorAll('.solution-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.solution-tab').forEach(t => {
+          t.classList.remove('active', 'text-edna-green', 'border-edna-green');
+          t.classList.add('text-edna-muted', 'border-transparent');
+        });
+        tab.classList.add('active', 'text-edna-green', 'border-edna-green');
+        tab.classList.remove('text-edna-muted', 'border-transparent');
+        document.querySelectorAll('.solution-tab-content').forEach(c => {
+          c.classList.add('hidden');
+          c.classList.remove('active');
+        });
+        document.getElementById('solution-' + tab.dataset.solution).classList.remove('hidden');
+      });
+    });
+
+    // Feature tab switching
+    function switchFeatureTab(tabId) {
+      document.querySelectorAll('.feature-tab').forEach(btn => {
+        btn.classList.remove('border-edna-green', 'text-white');
+        btn.classList.add('border-transparent', 'text-edna-muted');
+      });
+      document.querySelectorAll('.feature-tab-panel').forEach(panel => {
+        panel.classList.add('hidden');
+      });
+      document.getElementById('tab-' + tabId).classList.add('border-edna-green', 'text-white');
+      document.getElementById('tab-' + tabId).classList.remove('border-transparent', 'text-edna-muted');
+      document.getElementById('panel-' + tabId).classList.remove('hidden');
+    }
 
     // Mobile menu toggle
     const menuBtn = document.getElementById('mobile-menu-btn');
