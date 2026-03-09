@@ -7,3 +7,5 @@ Thumbs.db
 !assets/
 .playwright-mcp/
 nul
+
+.vercel
