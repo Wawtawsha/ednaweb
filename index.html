@@ -51,7 +51,7 @@
       "@type": "AggregateOffer",
       "priceCurrency": "USD",
       "offerCount": "3",
-      "description": "Available in Standard, Professional, and Enterprise editions"
+      "description": "Available in Framework Core, Professional, and Enterprise editions"
     }
   }
   </script>
@@ -519,6 +519,7 @@
         </div>
 
         <!-- Tabbed showcase -->
+<!--
         <div class="max-w-5xl mx-auto mb-16 reveal">
           <div class="flex border-b border-edna-border mb-0">
             <button id="tab-ssis-framework" class="feature-tab px-6 py-3 text-sm font-medium border-b-2 border-edna-green text-white" onclick="switchFeatureTab('ssis-framework')">SSIS Framework</button>
@@ -539,6 +540,7 @@
             </div>
           </div>
         </div>
+-->		
 
         <!-- Chess layout features -->
         <div class="space-y-16 max-w-5xl mx-auto">
@@ -553,6 +555,7 @@
               </p>
               <p class="text-sm text-edna-green font-medium">Metadata-driven orchestration &rarr;</p>
             </div>
+<!--
             <div class="bg-edna-surface border border-edna-border rounded-lg p-6">
               <div class="font-mono text-sm text-gray-300">
                 <p class="code-comment">-- Add a package to your application:</p>
@@ -562,8 +565,28 @@
                 <p class="pl-4">(<span class="code-string">'My ETL'</span>, <span class="code-string">'Load_Products.dtsx'</span>, <span class="text-amber-400">15</span>)</p>
               </div>
             </div>
+-->
           </div>
-
+          <div class="max-w-5xl mx-auto mb-16 reveal">
+            <div class="flex border-b border-edna-border mb-0">
+              <button id="tab-ssis-framework" class="feature-tab px-6 py-3 text-sm font-medium border-b-2 border-edna-green text-white" onclick="switchFeatureTab('ssis-framework')">SSIS Framework</button>
+              <button id="tab-framework-core" class="feature-tab px-6 py-3 text-sm font-medium border-b-2 border-transparent text-edna-muted hover:text-gray-300 transition-colors" onclick="switchFeatureTab('framework-core')">Framework Core</button>
+            </div>
+            <div class="bg-edna-surface border border-edna-border border-t-0 rounded-b-lg overflow-hidden">
+              <div id="panel-ssis-framework" class="feature-tab-panel flex justify-center p-6">
+                <video src="assets/video/AddAppPkg.mp4" autoplay loop muted playsinline controls class="max-w-2xl w-full rounded" aria-label="SSIS Framework — Adding an application package"></video>
+              </div>
+              <div id="panel-framework-core" class="feature-tab-panel hidden">
+                <div class="p-6 font-mono text-sm text-gray-300">
+                  <p class="code-comment">-- Add a package to your application:</p>
+                  <p class="mt-2"><span class="code-keyword">INSERT INTO</span> custom.ApplicationPackages</p>
+                  <p class="pl-4">(ApplicationName, PackageName, ExecutionOrder)</p>
+                  <p><span class="code-keyword">VALUES</span></p>
+                  <p class="pl-4">(<span class="code-string">'My ETL'</span>, <span class="code-string">'Load_Products.dtsx'</span>, <span class="text-amber-400">15</span>)</p>
+                </div>
+              </div>
+            </div>
+          </div>
           <!-- Feature 2: Cross-Project (reversed layout) -->
           <div class="grid md:grid-cols-2 gap-8 items-center reveal">
             <div class="md:order-2">
@@ -666,32 +689,32 @@
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
           <!-- SSIS Framework (highlighted) -->
           <div class="feature-card bg-edna-surface rounded-xl p-6 border-edna-green/50 reveal">
-            <div class="text-edna-green text-3xl mb-4">&#x2699;</div>
+            <img src="assets/images/fwpacico32.png" alt="SSIS Framework" class="w-8 h-8 mb-4">
             <h3 class="text-lg font-bold mb-2">SSIS Framework</h3>
             <p class="text-sm text-gray-400 mb-4">Metadata-driven orchestration. Execute entire SSIS applications with a single command.</p>
             <span class="text-xs font-semibold text-edna-green bg-edna-green/10 px-3 py-1 rounded-full">Featured Product</span>
           </div>
 
-          <!-- Catalog Compare -->
+          <!-- SSIS Catalog Compare -->
           <div class="feature-card bg-edna-surface rounded-xl p-6 reveal">
-            <div class="text-edna-green-light text-3xl mb-4">&#x1F50D;</div>
-            <h3 class="text-lg font-bold mb-2">Catalog Compare</h3>
+            <img src="assets/images/sccapp32.png" alt="SSIS Catalog Browser" class="w-8 h-8 mb-4">
+            <h3 class="text-lg font-bold mb-2">SSIS Catalog Compare</h3>
             <p class="text-sm text-gray-400 mb-4">Compare and deploy SSIS Catalogs across environments. Script entire folders with dependency ordering.</p>
             <span class="text-xs text-edna-muted">Enterprise: $4,995/year</span>
           </div>
 
-          <!-- Framework Manager -->
+          <!-- SSIS Framework Manager -->
           <div class="feature-card bg-edna-surface rounded-xl p-6 reveal">
-            <div class="text-edna-green-light text-3xl mb-4">&#x1F5A5;</div>
-            <h3 class="text-lg font-bold mb-2">Framework Manager</h3>
+            <img src="assets/images/sfmpacico32.png" alt="SSIS Framework" class="w-8 h-8 mb-4">
+            <h3 class="text-lg font-bold mb-2">SSIS Framework Manager</h3>
             <p class="text-sm text-gray-400 mb-4">Visual management tool for SSIS Framework. Create, configure, and execute applications from a GUI.</p>
             <span class="text-xs text-edna-muted">Included with commercial editions</span>
           </div>
 
-          <!-- Catalog Browser -->
+          <!-- SSIS Catalog Browser -->
           <div class="feature-card bg-edna-surface rounded-xl p-6 reveal">
-            <div class="text-edna-green-light text-3xl mb-4">&#x1F333;</div>
-            <h3 class="text-lg font-bold mb-2">Catalog Browser</h3>
+            <img src="assets/images/cbapp32.png" alt="SSIS Catalog Browser" class="w-8 h-8 mb-4">
+            <h3 class="text-lg font-bold mb-2">SSIS Catalog Browser</h3>
             <p class="text-sm text-gray-400 mb-4">Single treeview of your entire SSIS Catalog. See every artifact, property, and configuration at a glance.</p>
             <span class="text-xs text-edna-muted">Free</span>
           </div>
@@ -706,7 +729,7 @@
 
           <!-- DELM Suite / Fabric -->
           <div class="feature-card bg-edna-surface rounded-xl p-6 reveal">
-            <div class="text-edna-green-light text-3xl mb-4">&#x2601;</div>
+            <img src="assets/images/fdfwhite32.png" alt="SSIS Catalog Browser" class="w-8 h-8 mb-4">
             <h3 class="text-lg font-bold mb-2">DELM Suite</h3>
             <p class="text-sm text-gray-400 mb-4">Moving to Microsoft Fabric? DELM Suite includes Fabric Navigator, Pipeline Navigator, and AI Playbook.</p>
             <span class="text-xs text-edna-muted">Data Engineering Lifecycle Management</span>
@@ -739,12 +762,8 @@
 
           <!-- Standard -->
           <div class="bg-edna-surface border border-edna-border rounded-xl p-8 reveal">
-            <h3 class="text-lg font-bold mb-2">Standard</h3>
-            <div class="mb-6">
-              <!-- PLACEHOLDER: Replace with actual pricing from Andy -->
-              <p class="text-3xl font-bold text-white">Contact Us</p>
-              <p class="text-sm text-edna-muted mt-1">for pricing</p>
-            </div>
+            <h3 class="text-lg font-bold mb-2">Framework Core</h3>
+            <p class="text-sm text-edna-muted mb-6">Engine edition for technically mature teams</p>
             <ul class="space-y-3 mb-8">
               <li class="flex items-start gap-3 text-sm text-gray-300">
                 <span class="text-edna-green mt-0.5">&#x2714;</span>
@@ -764,11 +783,11 @@
               </li>
               <li class="flex items-start gap-3 text-sm text-gray-300">
                 <span class="text-edna-green mt-0.5">&#x2714;</span>
-                SSIS Framework Browser
+                Email support
               </li>
             </ul>
             <a href="#contact" class="block text-center border border-edna-border text-white font-semibold px-6 py-3 rounded-lg hover:border-edna-green hover:text-edna-green transition-colors">
-              Contact EDNA
+              Get Core Edition
             </a>
           </div>
 
@@ -777,16 +796,12 @@
             <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-edna-green text-black text-xs font-bold px-4 py-1 rounded-full">
               Most Popular
             </div>
-            <h3 class="text-lg font-bold mb-2">Professional</h3>
-            <div class="mb-6">
-              <!-- PLACEHOLDER: Replace with actual pricing from Andy -->
-              <p class="text-3xl font-bold text-white">Contact Us</p>
-              <p class="text-sm text-edna-muted mt-1">for pricing</p>
-            </div>
+            <h3 class="text-lg font-bold mb-2">SSIS Framework</h3>
+            <p class="text-sm text-edna-muted mb-6">Streamline SSIS DevOps with Framework Manager</p>
             <ul class="space-y-3 mb-8">
               <li class="flex items-start gap-3 text-sm text-gray-300">
                 <span class="text-edna-green mt-0.5">&#x2714;</span>
-                Everything in Standard
+                Everything in Framework Core
               </li>
               <li class="flex items-start gap-3 text-sm text-white font-medium">
                 <span class="text-edna-green mt-0.5">&#x2714;</span>
@@ -794,30 +809,18 @@
               </li>
               <li class="flex items-start gap-3 text-sm text-white font-medium">
                 <span class="text-edna-green mt-0.5">&#x2714;</span>
-                Property overrides
-              </li>
-              <li class="flex items-start gap-3 text-sm text-white font-medium">
-                <span class="text-edna-green mt-0.5">&#x2714;</span>
                 T-SQL script generation
-              </li>
-              <li class="flex items-start gap-3 text-sm text-gray-300">
-                <span class="text-edna-green mt-0.5">&#x2714;</span>
-                Email support
               </li>
             </ul>
             <a href="#contact" class="btn-primary block text-center bg-edna-green text-black font-bold px-6 py-3 rounded-lg hover:bg-edna-green-light">
-              Get Started
+              Get SSIS Framework
             </a>
           </div>
 
-          <!-- Enterprise -->
+          <!-- Next-Gen SSIS Catalog Compare -->
           <div class="bg-edna-surface border border-edna-border rounded-xl p-8 reveal">
-            <h3 class="text-lg font-bold mb-2">Enterprise</h3>
-            <div class="mb-6">
-              <!-- PLACEHOLDER: Replace with actual pricing from Andy -->
-              <p class="text-3xl font-bold text-white">Contact Us</p>
-              <p class="text-sm text-edna-muted mt-1">for pricing</p>
-            </div>
+            <h3 class="text-lg font-bold mb-2">Next-Gen SSIS Catalog Compare &ndash; Coming Soon</h3>
+            <p class="text-sm text-edna-muted mb-6">Enterprise-Grade Lifecycle &amp; DevOps for SSIS</p>
             <ul class="space-y-3 mb-8">
               <li class="flex items-start gap-3 text-sm text-gray-300">
                 <span class="text-edna-green mt-0.5">&#x2714;</span>
@@ -825,11 +828,7 @@
               </li>
               <li class="flex items-start gap-3 text-sm text-white font-medium">
                 <span class="text-edna-green mt-0.5">&#x2714;</span>
-                Enhanced Catalog Reports
-              </li>
-              <li class="flex items-start gap-3 text-sm text-white font-medium">
-                <span class="text-edna-green mt-0.5">&#x2714;</span>
-                DILM Deployment Utility
+                SSIS Catalog Compare v2
               </li>
               <li class="flex items-start gap-3 text-sm text-white font-medium">
                 <span class="text-edna-green mt-0.5">&#x2714;</span>
@@ -841,7 +840,7 @@
               </li>
             </ul>
             <a href="#contact" class="block text-center border border-edna-border text-white font-semibold px-6 py-3 rounded-lg hover:border-edna-green hover:text-edna-green transition-colors">
-              Contact EDNA
+              Get Notified of Release
             </a>
           </div>
         </div>
@@ -857,9 +856,10 @@
             <div class="bg-edna-surface border border-edna-border rounded-xl aspect-square flex items-center justify-center">
               <!-- PLACEHOLDER: Replace with Andy's actual photo -->
               <div class="text-center p-8">
-                <div class="text-6xl mb-4">&#x1F468;&#x200D;&#x1F4BB;</div>
+                <!--<div class="text-6xl mb-4">&#x1F468;&#x200D;&#x1F4BB;</div>
                 <p class="text-edna-muted text-sm">Andy Leonard's photo</p>
-                <p class="text-edna-muted text-xs mt-1">(placeholder)</p>
+                <p class="text-edna-muted text-xs mt-1">(placeholder)</p>-->
+				<img src="assets/images/AndyMug2018.png" alt="Andy Leonard">
               </div>
             </div>
           </div>
