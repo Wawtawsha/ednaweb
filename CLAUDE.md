@@ -114,11 +114,10 @@ Both forms POST to Nessus CRM submit-lead endpoint:
 
 ## Placeholders (Must Be Replaced Before Production)
 
-### Tracking IDs (in CONFIG object and LEAD_CLIENT_ID)
-- `GA4_ID: 'G-XXXXXXXXXX'` — line ~1399
-- `CLARITY_ID: 'xxxxxxxxxx'` — line ~1401
-- `NESSUS_CLIENT_ID: '00000000-0000-0000-0000-000000000000'` — line ~1403
-- `LEAD_CLIENT_ID: '00000000-0000-0000-0000-000000000000'` — line ~1213
+### Tracking IDs
+- `window.EDNA_NESSUS_CLIENT_ID` — shared global in `<script>` block before all others (single source of truth for both tracking and lead forms)
+- `GA4_ID: 'G-XXXXXXXXXX'` — in CONFIG object inside tracking IIFE
+- `CLARITY_ID: 'xxxxxxxxxx'` — in CONFIG object inside tracking IIFE
 
 ### URLs
 - **Domain**: `ssisframework.com` in canonical/OG meta (lines 15, 21) — confirm actual domain

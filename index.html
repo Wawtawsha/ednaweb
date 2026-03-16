@@ -897,49 +897,44 @@
         </div>
 
         <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          <!-- Testimonial 1 - Real quote from Catalog Compare -->
+          <!-- Testimonial 1 -->
           <div class="bg-edna-surface border border-edna-border rounded-xl p-6 reveal">
             <div class="flex gap-1 mb-4 text-amber-400">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</div>
             <p class="text-gray-300 text-sm leading-relaxed mb-6">
-              "Reduced 400+ package deployments from hours to 3-5 minutes per package with repeatable results."
+              "One deployment package took 40 minutes to deploy &ndash; given the task to deploy over 400+ SSIS packages &ndash; that took a very long time. When I found the Catalog Compare tool, it took the deployment of 400 packages to 3-5 minutes per package (or less) with repeatable results in each environment. It's a super time-saver with a 'keep it simple' front end."
             </p>
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 bg-edna-green/20 rounded-full flex items-center justify-center text-edna-green font-bold text-sm">DA</div>
+              <div class="w-10 h-10 bg-edna-green/20 rounded-full flex items-center justify-center text-edna-green font-bold text-sm">EA</div>
               <div>
-                <p class="text-sm font-semibold text-white">Data Architect</p>
-                <p class="text-xs text-edna-muted">Enterprise Client</p>
+                <p class="text-sm font-semibold text-white">ETL Architect</p>
               </div>
             </div>
           </div>
 
-          <!-- PLACEHOLDER Testimonial 2 -->
+          <!-- Testimonial 2 -->
           <div class="bg-edna-surface border border-edna-border rounded-xl p-6 reveal">
             <div class="flex gap-1 mb-4 text-amber-400">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</div>
             <p class="text-gray-300 text-sm leading-relaxed mb-6">
-              <!-- PLACEHOLDER: Replace with real testimonial from Andy -->
-              "The SSIS Framework transformed how we manage our nightly ETL. What used to be a nightmare of SQL Agent jobs is now a single, auditable command."
+              "I tried to reconcile two SSIS Catalogs for a week. I used SSIS Catalog Compare and was finished in less than one hour."
             </p>
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 bg-edna-green/20 rounded-full flex items-center justify-center text-edna-green font-bold text-sm">SE</div>
+              <div class="w-10 h-10 bg-edna-green/20 rounded-full flex items-center justify-center text-edna-green font-bold text-sm">EA</div>
               <div>
-                <p class="text-sm font-semibold text-white">Senior ETL Developer</p>
-                <p class="text-xs text-edna-muted"><!-- PLACEHOLDER: Company --></p>
+                <p class="text-sm font-semibold text-white">Enterprise Architect</p>
               </div>
             </div>
           </div>
 
-          <!-- PLACEHOLDER Testimonial 3 -->
+          <!-- Testimonial 3 -->
           <div class="bg-edna-surface border border-edna-border rounded-xl p-6 reveal">
             <div class="flex gap-1 mb-4 text-amber-400">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</div>
             <p class="text-gray-300 text-sm leading-relaxed mb-6">
-              <!-- PLACEHOLDER: Replace with real testimonial from Andy -->
-              "Andy's framework and training helped our team go from zero SSIS knowledge to production-ready pipelines in weeks."
+              "Hey, I demoed Catalog Compare to a team member last Thursday and it ended up saving them hours of work. I looked like a hero and so did you."
             </p>
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 bg-edna-green/20 rounded-full flex items-center justify-center text-edna-green font-bold text-sm">DM</div>
+              <div class="w-10 h-10 bg-edna-green/20 rounded-full flex items-center justify-center text-edna-green font-bold text-sm">DE</div>
               <div>
-                <p class="text-sm font-semibold text-white">Data Manager</p>
-                <p class="text-xs text-edna-muted"><!-- PLACEHOLDER: Company --></p>
+                <p class="text-sm font-semibold text-white">Enterprise Data Engineer</p>
               </div>
             </div>
           </div>
@@ -1173,11 +1168,17 @@
         <p class="text-xs text-edna-muted">&copy; 2026 Enterprise Data & Analytics. All rights reserved.</p>
         <div class="flex gap-6">
           <a href="privacy.html" class="text-xs text-edna-muted hover:text-edna-green transition-colors">Privacy Policy</a>
-          <a href="#" class="text-xs text-edna-muted hover:text-edna-green transition-colors">Terms of Service</a>
         </div>
       </div>
     </div>
   </footer>
+
+  <!-- ========== SHARED CONFIG ========== -->
+  <script>
+    // Single source of truth for Nessus CRM client ID — used by both form handlers and tracking
+    // PLACEHOLDER: Replace with EDNA's actual Nessus client ID after running 10_edna_client.sql
+    window.EDNA_NESSUS_CLIENT_ID = '0fed3a0a-8b10-407f-bc07-7476a4a754ab';
+  </script>
 
   <!-- ========== SCRIPTS ========== -->
   <script>
@@ -1307,7 +1308,6 @@
     // FORM HANDLERS (Newsletter + Contact)
     // ==========================================
     const LEAD_ENDPOINT = 'https://rjudjhjcfivugbyztnce.supabase.co/functions/v1/submit-lead';
-    const LEAD_CLIENT_ID = '00000000-0000-0000-0000-000000000000'; // PLACEHOLDER: Replace with EDNA's Nessus client ID
 
     function isValidEmail(email) {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -1320,14 +1320,14 @@
     }
 
     async function submitLead(data) {
-      if (LEAD_CLIENT_ID === '00000000-0000-0000-0000-000000000000') {
+      if (window.EDNA_NESSUS_CLIENT_ID === '00000000-0000-0000-0000-000000000000') {
         // Placeholder mode — simulate success
         return { ok: true };
       }
       return fetch(LEAD_ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ client_id: LEAD_CLIENT_ID, ...data }),
+        body: JSON.stringify({ client_id: window.EDNA_NESSUS_CLIENT_ID, ...data }),
         keepalive: true,
       });
     }
@@ -1401,8 +1401,7 @@
       GA4_ID: 'G-XXXXXXXXXX',
       // PLACEHOLDER: Replace with your Microsoft Clarity project ID
       CLARITY_ID: 'xxxxxxxxxx',
-      // PLACEHOLDER: Replace with EDNA's Nessus CRM client ID
-      NESSUS_CLIENT_ID: '00000000-0000-0000-0000-000000000000',
+      NESSUS_CLIENT_ID: window.EDNA_NESSUS_CLIENT_ID,
       NESSUS_ENDPOINT: 'https://rjudjhjcfivugbyztnce.supabase.co/functions/v1/track-visitor',
       NESSUS_WEBSITE_LABEL: 'edna-ssis-framework',
       CONSENT_KEY: 'edna_cookie_consent',
@@ -1580,15 +1579,20 @@
         });
       }, { passive: true });
 
-      // Time on page (fires on page hide/unload)
+      // Time on page — fires once on page unload (not on every tab switch)
+      let timeOnPageSent = false;
+      function sendTimeOnPage() {
+        if (timeOnPageSent) return;
+        timeOnPageSent = true;
+        nessusTrack({
+          event_name: 'time_on_page',
+          event_data: JSON.stringify({ seconds: Math.round((Date.now() - pageStart) / 1000) }),
+        });
+      }
       document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'hidden') {
-          nessusTrack({
-            event_name: 'time_on_page',
-            event_data: JSON.stringify({ seconds: Math.round((Date.now() - pageStart) / 1000) }),
-          });
-        }
+        if (document.visibilityState === 'hidden') sendTimeOnPage();
       });
+      window.addEventListener('pagehide', sendTimeOnPage);
 
       // Section visibility tracking
       const sections = document.querySelectorAll('section[id]');
