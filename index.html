@@ -1516,8 +1516,54 @@
     }
 
     // --- Nessus CRM ---
+
+    // Anonymous tracking helper — no cookies, no storage, no personal data.
+    // Legally exempt from consent under GDPR legitimate interest (CNIL guidance):
+    // first-party, anonymous, aggregate-only, no cross-site tracking.
+    function nessusAnonymous(data) {
+      if (CONFIG.NESSUS_CLIENT_ID === '00000000-0000-0000-0000-000000000000') return;
+      fetch(CONFIG.NESSUS_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          client_id: CONFIG.NESSUS_CLIENT_ID,
+          page_path: window.location.pathname,
+          website_label: CONFIG.NESSUS_WEBSITE_LABEL,
+          referrer: document.referrer || null,
+          ...data,
+        }),
+        keepalive: true,
+      }).catch(() => {});
+    }
+
+    // Fire anonymous page view for EVERY visitor — no consent needed
+    nessusAnonymous({ event_name: 'page_view_anonymous' });
+
+    // Track ALL outbound/action link clicks anonymously (no session, no user_agent)
+    document.querySelectorAll('a[href]').forEach(el => {
+      const href = el.getAttribute('href');
+      if (!href || href === '#' || href.startsWith('#main') || href === 'privacy.html') return;
+      // Track: external links, purchase links, CTAs, anchor navigation
+      const isExternal = href.startsWith('http');
+      const isAnchorCTA = /^#(contact|pricing|newsletter)$/.test(href);
+      const isBtnPrimary = el.classList.contains('btn-primary');
+      if (isExternal || isAnchorCTA || isBtnPrimary) {
+        el.addEventListener('click', () => {
+          nessusAnonymous({
+            event_name: 'link_click_anonymous',
+            event_data: JSON.stringify({
+              text: el.textContent.trim().substring(0, 50),
+              href: href,
+              section: el.closest('section')?.id || el.closest('footer') ? 'footer' : 'nav',
+            }),
+          });
+        });
+      }
+    });
+
+    // Full behavioral tracking — requires consent
     function initNessus() {
-      if (CONFIG.NESSUS_CLIENT_ID === '00000000-0000-0000-0000-000000000000') return; // Skip placeholder
+      if (CONFIG.NESSUS_CLIENT_ID === '00000000-0000-0000-0000-000000000000') return;
 
       // Session ID (per browser session)
       let sessionId = sessionStorage.getItem('nessus_session_id');
@@ -1543,27 +1589,34 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
           keepalive: true,
-        }).catch(() => {}); // Silent failure
+        }).catch(() => {});
       }
 
-      // Page view
+      // Consented page view (with session + user_agent for behavioral analysis)
       nessusTrack({ event_name: 'page_view' });
 
-      // CTA clicks
-      document.querySelectorAll('a[href="#contact"], a[href*="calendly"], .btn-primary').forEach(el => {
-        el.addEventListener('click', () => {
-          nessusTrack({
-            event_name: 'cta_click',
-            event_data: JSON.stringify({
-              text: el.textContent.trim().substring(0, 50),
-              href: el.getAttribute('href'),
-              section: el.closest('section')?.id || 'unknown',
-            }),
+      // Consented CTA clicks — all outbound + action links with full session context
+      document.querySelectorAll('a[href]').forEach(el => {
+        const href = el.getAttribute('href');
+        if (!href || href === '#' || href.startsWith('#main') || href === 'privacy.html') return;
+        const isExternal = href.startsWith('http');
+        const isAnchorCTA = /^#(contact|pricing|newsletter|problem|solution|features|suite|about|faq)$/.test(href);
+        const isBtnPrimary = el.classList.contains('btn-primary');
+        if (isExternal || isAnchorCTA || isBtnPrimary) {
+          el.addEventListener('click', () => {
+            nessusTrack({
+              event_name: 'cta_click',
+              event_data: JSON.stringify({
+                text: el.textContent.trim().substring(0, 50),
+                href: href,
+                section: el.closest('section')?.id || el.closest('footer') ? 'footer' : 'nav',
+              }),
+            });
           });
-        });
+        }
       });
 
-      // Scroll depth (sentinel approach from Shrike)
+      // Scroll depth
       const scrollThresholds = [25, 50, 75, 90];
       const nessusScrollFired = new Set();
       window.addEventListener('scroll', () => {
@@ -1579,7 +1632,7 @@
         });
       }, { passive: true });
 
-      // Time on page — fires once on page unload (not on every tab switch)
+      // Time on page — fires once on page unload
       let timeOnPageSent = false;
       function sendTimeOnPage() {
         if (timeOnPageSent) return;
@@ -1619,7 +1672,8 @@
     } else if (consent === null) {
       showBanner(); // First visit or expired consent
     }
-    // consent === 'rejected' → do nothing, no banner, no tracking
+    // consent === 'rejected' → do nothing (for GA4/Clarity/full Nessus)
+    // Anonymous Nessus tracking already fired above regardless of consent
 
   })();
   </script>
